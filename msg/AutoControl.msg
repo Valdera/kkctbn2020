@@ -1,0 +1,5 @@
+uint16 MANUAL = 1300
+uint16 AVOID_RED = 1301
+uint16 AVOID_RED_AND_GREEN = 1302
+
+uint16 state
