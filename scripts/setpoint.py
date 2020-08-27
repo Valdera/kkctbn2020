@@ -22,7 +22,6 @@ def setpoint():
     # (code in C++) Cb dicek bener ato kgk :)
     # std_msgs::Float64 setpoint
     # setpoint.data = -10
-    
     setpoint = -10
     # Set the rate to 0.2 Hz which is 5 seconds
     rate = rospy.Rate(0.2)
