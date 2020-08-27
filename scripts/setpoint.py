@@ -18,7 +18,7 @@ def setpoint():
         rospy.sleep(1)
 
     # setpoint -10 as Float64
-    setpoint = -10
+    setpoint = -10 # in C++ using setpoint.data = -10
     # Set the rate to 0.2 Hz which is 5 seconds
     rate = rospy.Rate(0.2)
 
