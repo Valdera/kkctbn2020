@@ -1,18 +1,18 @@
-uint8 red_l_h
-uint8 red_l_s
-uint8 red_l_v
-uint8 red_u_h
-uint8 red_u_s
-uint8 red_u_v
+uint8 red_low_hue
+uint8 red_low_sat
+uint8 red_low_val
+uint8 red_high_hue
+uint8 red_high_sat
+uint8 red_high_val
 
-uint8 green_l_h
-uint8 green_l_s
-uint8 green_l_v
-uint8 green_u_h
-uint8 green_u_s
-uint8 green_u_v
+uint8 green_low_hue
+uint8 green_low_sat
+uint8 green_low_val
+uint8 green_high_hue
+uint8 green_high_sat
+uint8 green_high_val
 
-int32 contrast
 int32 brightness
+int32 contrast
 uint16 roi_y
 float64 gamma
