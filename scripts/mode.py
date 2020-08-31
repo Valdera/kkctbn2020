@@ -5,6 +5,11 @@ from kkctbn2020.msg import Mode
 from mavros_msgs.msg import RCIn
 
 def pwm_mode_callback(msg):
+	'''
+	publish mode ketika mendapat input dari RC
+	input < 1400 --> publish Mode.HOLD
+	input > 1700 --> publish Mode.ARMED
+	'''
 	try:
 		pwm = msg.channels[7]
 	except IndexError:
