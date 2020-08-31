@@ -59,6 +59,9 @@ generate_dynamic_reconfigure_options(
 add_message_files(
   FILES
   AutoControl.msg
+  Mode.msg
+  ObjectCount.mg
+  Config.msg
 )
 
 ## Generate services in the 'srv' folder
