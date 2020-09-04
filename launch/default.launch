@@ -7,5 +7,10 @@
     <node pkg="kkctbn2020" name="throttle_pwm" type="throttle_pwm.py" output="screen"/>
     <node pkg="kkctbn2020" name="mode" type="mode.py" output="screen"/>
     <node pkg="kkctbn2019" name="pwm_override" type="pwm_override.py" output="screen"/>
+    <node pkg="kkctbn2019" name="motor_controller" type="motor_controller.py" output="screen"/>
+    <node respawn="true" pkg="joy" type="joy_node" name="turtle_joy" >
+      <param name="dev" type="string" value="/dev/input/js0" />
+      <param name="deadzone" value="0.12" />
+    </node>
 
 </launch>
