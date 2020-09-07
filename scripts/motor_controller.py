@@ -25,10 +25,10 @@ def pwmCallback(msg):
 def joyCallback(msg):
     global currentThrottlePwm
     
-    if (msg->buttons[0] == 1):
+    if (msg.buttons[0] == 1):
         currentThrottlePwm += 50
         
-    if (msg->buttons[2] == 1):
+    if (msg.buttons[2] == 1):
         currentThrottlePwm -= 50
         
     if (currentThrottlePwm > 1900):
@@ -47,9 +47,9 @@ def modeCallback(msg):
     
 def autoControlCallback(msg):
     global autoControl
-    global autoControlBeforeauto
-    ControlBefore = autoControlautoControl
-    autoControlautoControl = msg
+    global autoControlBefore
+    autoControlBefore = autoControl
+    autoControl = msg
     if (autoControlBefore.state != AutoControl.MANUAL and autoControl.state == AutoControl.MANUAL):
         rcin = OverrideRCIn()
         for i in range(8):
@@ -61,40 +61,43 @@ def objectCountCallback(msg):
     global mode
     global control_effort
     throttle_pwm = UInt16()
-    if (autoControl.state != AutoControl.MANUAL && mode.value == Mode.ARMED):
+    if (autoControl.state != AutoControl.MANUAL and mode.value == Mode.ARMED):
         rcin = OverrideRCIn()
+        motor1 = 0
+        motor2 = 1
+        
         if (autoControl.state == AutoControl.AVOID_RED_AND_GREEN):
             if (msg.red > 0):
                 for i in range(8):
                     rcin.channels[i] = 0
                 if (pwm_override):
-                    rcin.channels[2] = 1900
+                    rcin.channels[motor1] = 1900
                 else:
-                    rcin.channels[2] = currentThrottlePwm
-                rcin.channels[0] = 1500 + control_effort
-                if (rcin.channels[0] > 2200):
-                    rcin.channels[0] = 2200
-                elif (rcin.channels[0] < 800):
-                    rcin.channels[0] = 800
+                    rcin.channels[motor1] = currentThrottlePwm
+                rcin.channels[motor2] = 1500 + control_effort
+                if (rcin.channels[motor2] > 2200):
+                    rcin.channels[motor1] = 2200
+                elif (rcin.channels[motor1] < 800):
+                    rcin.channels[motor1] = 800
             else:
                 if (pwm_override):
-                    rcin.channels[2] = 1900
+                    rcin.channels[motor1] = 1900
                 else:
-                    rcin.channels[2] = currentThrottlePwm
-                rcin.channels[0] = 1650
+                    rcin.channels[motor1] = currentThrottlePwm
+                rcin.channels[motor2] = 1650
         else:
             if (msg.red > 0):
                 for i in range(8):
                     rcin.channels[i] = 0
-                rcin.channels[2] = currentThrottlePwm
-                rcin.channels[0] = 1500 + control_effort
-                if (rcin.channels[0] > 2200):
-                    rcin.channels[0] = 2200
-                elif (rcin.channels[0] < 800):
-                    rcin.channels[0] = 800
+                rcin.channels[motor1] = currentThrottlePwm
+                rcin.channels[motor2] = 1500 + control_effort
+                if (rcin.channels[motor2] > 2200):
+                    rcin.channels[motor2] = 2200
+                elif (rcin.channels[motor2] < 800):
+                    rcin.channels[motor2] = 800
             else:
-                rcin.channels[2] = currentThrottlePwm
-                rcin.channels[0] = 1650
+                rcin.channels[motor1] = currentThrottlePwm
+                rcin.channels[motor2] = 1650
         
         override_publisher.publish(rcin)
         
