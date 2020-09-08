@@ -1,4 +1,4 @@
 <launch>
-	<nano pkg="kkctbn2020" name="gcs" type="gcs.py" output="screen"/>
-	<nano name="rqt_reconfigure" pkg="rqt_reconfigure" type="rqt_reconfigure" />
+	<node pkg="kkctbn2020" name="gcs" type="gcs.py" output="screen"/>
+	<node name="rqt_reconfigure" pkg="rqt_reconfigure" type="rqt_reconfigure" />
 </launch>
