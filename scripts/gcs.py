@@ -155,7 +155,7 @@ if __name__ == '__main__':
         auto_label.config(text="Auto: " + auto_ctrl)
         master.update()
 
-        cfg = config()
+        cfg = Config()
         cfg.red_low_hue = red_low_hue.get()
         cfg.red_low_sat = red_low_sat.get()
         cfg.red_low_val = red_low_val.get()
@@ -173,4 +173,4 @@ if __name__ == '__main__':
         cfg.gamma = gamma.get()
         cfg.roi_y = roi_y.get()
 
-        config_publisher.publish(msg)
+        cfg_publisher.publish(cfg)
