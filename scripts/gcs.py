@@ -1,4 +1,4 @@
-#!usr/bin/env python
+#!/usr/bin/env python
 # If using ROS Noetic on Ubuntu 20.04 change python to python3 to make it working
 import cv2 as cv
 import numpy
