@@ -130,10 +130,10 @@ if __name__ == '__main__':
 
         red_mask = cv.inRange(hsv, low_red, high_red)
 
-        # Detect Countours
+        # Detect Contours
         contours, _ = cv.findContours(red_mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)[-2:]
         min_x = 9999
-        for cnt in countours:
+        for cnt in contours:
             area = cv.contourArea(cnt)
             approx = cv.approxPolyDP(cnt, 0.02 * cv.arcLength(cnt, True), True)
             M = cv.moments(cnt)
@@ -168,7 +168,7 @@ if __name__ == '__main__':
         # Detect Countours
         contours, _ = cv.findContours(green_mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)[-2:]
         max_x = 0
-        for cnt in countours:
+        for cnt in contours:
             area = cv.contourArea(cnt)
             approx = cv.approxPolyDP(cnt, 0.02 * cv.arcLength(cnt, True), True)
             M = cv.moments(cnt)
