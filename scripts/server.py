@@ -3,7 +3,7 @@
 import rospy
 
 from dynamic_reconfigure.server import Server
-from kkctbn2020.cfg import Kkctbn2020Config
+from kkctbn2020.cfg import kkctbn2020Config
 
 def callback(config, level):
     # Return the current configuration
@@ -14,6 +14,6 @@ if __name__ == "__main__":
     rospy.init_node("server", anonymous=False)
     
     # Configure the server and send the configuration
-    server = Server(Kkctbn2020Config, callback)
+    server = Server(kkctbn2020Config, callback)
     rospy.spin()
     

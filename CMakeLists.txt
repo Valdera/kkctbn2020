@@ -16,10 +16,15 @@ find_package(catkin REQUIRED COMPONENTS
   genmsg
   mavros_msgs
   dynamic_reconfigure
+  message_generation
+)
+
+find_package(
+  OpenCV REQUIRED
 )
 
 generate_dynamic_reconfigure_options(
-    cfg/Kkctbn2020.cfg
+    cfg/kkctbn2020.cfg
 )
 
 ## System dependencies are found with CMake's conventions
@@ -60,7 +65,7 @@ add_message_files(
   FILES
   AutoControl.msg
   Mode.msg
-  ObjectCount.mg
+  ObjectCount.msg
   Config.msg
 )
 
@@ -84,6 +89,7 @@ generate_messages(
   std_msgs
   mavros_msgs
   sensor_msgs
+  kkctbn2020
 )
 
 ################################################
@@ -100,11 +106,7 @@ generate_messages(
 ##   * uncomment the "generate_dynamic_reconfigure_options" section below
 ##     and list every .cfg file to be processed
 
-## Generate dynamic reconfigure parameters in the 'cfg' folder
-generate_dynamic_reconfigure_options(
-    cfg/Kkctbn2020.cfg
-)
-
+## Generate dynamic reconfigure parameters in the 'cfg' f
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -117,7 +119,7 @@ generate_dynamic_reconfigure_options(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES kkctbn2020
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
 #  DEPENDS system_lib
 )
 
@@ -128,8 +130,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
+  include  ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -140,7 +141,8 @@ include_directories(
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS
+# Config files that allow to use dynamic_reconfigure.
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
@@ -156,6 +158,7 @@ include_directories(
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+#add_dependencies(kkctbn2020 ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node

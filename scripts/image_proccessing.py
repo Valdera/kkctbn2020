@@ -9,7 +9,7 @@ from sensor_msgs.msg import Image, CompressedImage
 from std_msgs.msg import Float64
 # Local Import
 from kkctbn2020.msg import AutoControl, Config, ObjectCount
-from kkctbn2020.cfg import Kkctbn2020Config
+from kkctbn2020.cfg import *
 
 data = None
 MIN_AREA = 600

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import rospy
 from mavros_msgs.msg import RCIn
-from AutoControl.msg import AutoControl
+from kkctbn2020.msg import AutoControl
 
 def rcin_callback(msg):
     # Get the current pwm, set the pwm to 1300 if there is an IndexError

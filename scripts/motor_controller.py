@@ -105,20 +105,20 @@ def objectCountCallback(msg):
 if __name__ == '__main__':
     rospy.init_node("motor_controller")
     
-    override_publisher = rospy.Publisher("/mavros/rc/override", OverrideRCIn, 8)
+    override_publisher = rospy.Publisher("/mavros/rc/override", OverrideRCIn, queue_size=8)
     
-    pwm_subscriber = rospy.Subscriber("/makarax/pwm_throttle", 8, pwmCallback)
+    pwm_subscriber = rospy.Subscriber("/makarax/pwm_throttle", UInt16, pwmCallback)
     
-    mode_subscriber = rospy.Subscriber("/makarax/mode", 8, modeCallback)
+    mode_subscriber = rospy.Subscriber("/makarax/mode", Mode, modeCallback)
     
-    pwm_override_subscriber = rospy.Subscriber("/makarax/pwm_override", 8, pwmOverrideCallback)
+    pwm_override_subscriber = rospy.Subscriber("/makarax/pwm_override", Bool, pwmOverrideCallback)
     
-    control_effort_subscriber = rospy.Subscriber("control_effort", 8, controlEffortCallback)
+    control_effort_subscriber = rospy.Subscriber("control_effort", Float64, controlEffortCallback)
     
-    red_count_subscriber = rospy.Subscriber("/makarax/object/count", 8, objectCountCallback)
+    red_count_subscriber = rospy.Subscriber("/makarax/object/count", ObjectCount, objectCountCallback)
     
-    joy_subscriber = rospy.Subscriber("joy", 8, joyCallback)
+    joy_subscriber = rospy.Subscriber("joy", Joy, joyCallback)
     
-    auto_control_subscriber = rospy.Subscriber("/makarax/auto_control", 8, autoControlCallback)
+    auto_control_subscriber = rospy.Subscriber("/makarax/auto_control", AutoControl, autoControlCallback)
     
     rospy.spin()
