@@ -44,9 +44,9 @@ def nothing(x):
 
 # If there is a callback,
 # set the var to the global var cfg
-def config_callback(in):
+def config_callback(cfg_in):
     global cfg
-    cfg = in
+    cfg = cfg_in
 
 # If there is a callback,
 # set the var to the global var auto_ctrl
