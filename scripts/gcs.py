@@ -8,7 +8,7 @@ from PIL import Image, ImageTk
 from sensor_msgs.msg import CompressedImage
 from std_msgs.msg import UInt16
 # Local Import
-from kkctbn2020.msg import AutoControl, Config, ObjectCount
+from kkctbn2020.msg import AutoControl, Config, ObjectCount, Mode
 
 ori = numpy.zeros([480, 640, 3], dtype = numpy.uint8)
 red_mask = numpy.zeros([480, 640, 3], dtype = numpy.uint8)
@@ -85,24 +85,24 @@ if __name__ == '__main__':
 
     slider_frame1 = Tkinter.Frame(master=master)
 
-    contrast = add_slicer('Contrast', -255, 255, 1, slider_frame1, 0)
-    brightness = add_slicer('Brightness', -127, 127, 1, slider_frame1, -2)
-    gamma = add_slicer('Gamma', 0.1, 3, 0.1, slider_frame1, 1)
-    roi_y = add_slicer('ROI Y', 0, 480, 1, slider_frame1, 5)
-    red_low_hue = add_slicer('RED L-HUE', 0, 255, 1, slider_frame1, 118)
-    red_low_sat = add_slicer('RED L-SAT', 0, 255, 1, slider_frame1, 77)
-    red_low_val = add_slicer('RED L-VAL', 0, 255, 1, slider_frame1, 0)
-    red_high_hue = add_slicer('RED H-HUE', 0, 255, 1, slider_frame1, 186)
-    red_high_sat = add_slicer('RED H-SAT', 0, 255, 1, slider_frame1, 255)
-    red_high_val = add_slicer('RED H-VAL', 0, 255, 1, slider_frame1, 255)
+    contrast = add_slider('Contrast', -255, 255, 1, slider_frame1, 0)
+    brightness = add_slider('Brightness', -127, 127, 1, slider_frame1, -2)
+    gamma = add_slider('Gamma', 0.1, 3, 0.1, slider_frame1, 1)
+    roi_y = add_slider('ROI Y', 0, 480, 1, slider_frame1, 5)
+    red_low_hue = add_slider('RED L-HUE', 0, 255, 1, slider_frame1, 118)
+    red_low_sat = add_slider('RED L-SAT', 0, 255, 1, slider_frame1, 77)
+    red_low_val = add_slider('RED L-VAL', 0, 255, 1, slider_frame1, 0)
+    red_high_hue = add_slider('RED H-HUE', 0, 255, 1, slider_frame1, 186)
+    red_high_sat = add_slider('RED H-SAT', 0, 255, 1, slider_frame1, 255)
+    red_high_val = add_slider('RED H-VAL', 0, 255, 1, slider_frame1, 255)
 
     slider_frame2 = Tkinter.Frame(master=master)
-    green_low_hue = add_slicer('GREEN L-HUE', 0, 255, 1, slider_frame1, 69)
-    green_low_sat = add_slicer('GREEN L-SAT', 0, 255, 1, slider_frame1, 43)
-    green_low_val = add_slicer('GREEN L-VAL', 0, 255, 1, slider_frame1, 0)
-    green_high_hue = add_slicer('GREEN H-HUE', 0, 255, 1, slider_frame1, 99)
-    green_high_sat = add_slicer('GREEN H-SAT', 0, 255, 1, slider_frame1, 255)
-    green_high_val = add_slicer('GREEN H-VAL', 0, 255, 1, slider_frame1, 255)
+    green_low_hue = add_slider('GREEN L-HUE', 0, 255, 1, slider_frame1, 69)
+    green_low_sat = add_slider('GREEN L-SAT', 0, 255, 1, slider_frame1, 43)
+    green_low_val = add_slider('GREEN L-VAL', 0, 255, 1, slider_frame1, 0)
+    green_high_hue = add_slider('GREEN H-HUE', 0, 255, 1, slider_frame1, 99)
+    green_high_sat = add_slider('GREEN H-SAT', 0, 255, 1, slider_frame1, 255)
+    green_high_val = add_slider('GREEN H-VAL', 0, 255, 1, slider_frame1, 255)
 
     slider_frame1.grid(row=1, column=2)
     slider_frame2.grid(row=1, column=3)
