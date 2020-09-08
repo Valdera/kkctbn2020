@@ -47,6 +47,8 @@ while True:
         ret,thresh = cv2.threshold(mask1, 40, 255, 0)
 
         _, contours, _= cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        # Use this code instead for running in ROS Noetic
+        # contours, _= cv2.findContours(thrash, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
         if len(contours) != 0:
             c = max(contours, key = cv2.contourArea)
