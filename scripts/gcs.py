@@ -49,11 +49,11 @@ def throttle_pwm_callback(pwm):
     global throttle_pwm
     throttle_pwm = pwm.data
 
-def mode_callback(in):
+def mode_callback(mode_in):
     global mode
-    if in.value = Mode.ARMED:
+    if mode_in.value == Mode.ARMED:
         mode = "ARMED"
-    elif in.value = Mode.HOLD:
+    elif mode_in.value == Mode.HOLD:
         mode = "HOLD"
 
 def auto_control_callback(msg):
