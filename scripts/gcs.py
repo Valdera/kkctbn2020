@@ -131,21 +131,21 @@ if __name__ == '__main__':
     while not rospy.is_shutdown():
         if ori is not None:
             b, g, r = cv.split(ori)
-            img_array = cv.merge(r, g, b)
+            img_array = cv.merge((r, g, b))
             img = Image.fromarray(img_array)
             img_tk = ImageTk.PhotoImage(image=img)
             ori_label.config(image=img_tk)
 
         if red_mask is not None:
             b, g, r = cv.split(red_mask)
-            img_array = cv.merge(r, g, b)
+            img_array = cv.merge((r, g, b))
             img = Image.fromarray(img_array)
             img_tk = ImageTk.PhotoImage(image=img)
             red_mask_label.config(image=img_tk)
 
         if green_mask is not None:
             b, g, r = cv.split(green_mask)
-            img_array = cv.merge(r, g, b)
+            img_array = cv.merge((r, g, b))
             img = Image.fromarray(img_array)
             img_tk = ImageTk.PhotoImage(image=img)
             green_mask_label.config(image=img_tk)
