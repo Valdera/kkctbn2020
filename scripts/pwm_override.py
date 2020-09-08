@@ -45,7 +45,7 @@ def callback(config):
 if __name__ == '__main__':
     rospy.init_node("pwm_override")
     
-    client = dynamic_reconfigure.client.Client("Server", config_callback=callback)
+    client = dynamic_reconfigure.client.Client("server", config_callback=callback)
     
     pwm_override_publisher = rospy.Publisher("/makarax/pwm_override", Bool, queue_size=8)
     
