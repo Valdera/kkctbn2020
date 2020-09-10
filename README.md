@@ -1,3 +1,6 @@
 # KKCTBN2020
 
-<p> AMV Juara! Juara! Juara! </p>
+<h1> AMV Juara! Juara! Juara! </h1>
+
+<p> Semangat, editan masih banyak menunggumu :) </p>
+
