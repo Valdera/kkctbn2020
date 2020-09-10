@@ -7,7 +7,7 @@ def setpoint():
     # initialize the node
     rospy.init_node('setpoint', anonymous=True)
     # set setpoint as ROS Publisher
-    setpoint_node = rospy.Publisher("gcs", Float64, queue_size=1)
+    setpoint_node = rospy.Publisher("setpoint", Float64, queue_size=1)
 
     rospy.loginfo("Starting setpoint publisher")
 
