@@ -131,24 +131,24 @@ if __name__ == '__main__':
     while not rospy.is_shutdown():
         if ori is not None:
             b, g, r = cv.split(ori)
-            img_array = cv.merge((r, g, b))
-            img = Image.fromarray(img_array)
-            img_tk = ImageTk.PhotoImage(image=img)
-            ori_label.config(image=img_tk)
+            ori_img_array = cv.merge((r, g, b))
+            ori_img = Image.fromarray(ori_img_array)
+            ori_img_tk = ImageTk.PhotoImage(image=ori_img)
+            ori_label.config(image=ori_img_tk)
 
         if red_mask is not None:
             b, g, r = cv.split(red_mask)
-            img_array = cv.merge((r, g, b))
-            img = Image.fromarray(img_array)
-            img_tk = ImageTk.PhotoImage(image=img)
-            red_mask_label.config(image=img_tk)
+            red_img_array = cv.merge((r, g, b))
+            red_img = Image.fromarray(red_img_array)
+            red_img_tk = ImageTk.PhotoImage(image=red_img)
+            red_mask_label.config(image=red_img_tk)
 
         if green_mask is not None:
             b, g, r = cv.split(green_mask)
-            img_array = cv.merge((r, g, b))
-            img = Image.fromarray(img_array)
-            img_tk = ImageTk.PhotoImage(image=img)
-            green_mask_label.config(image=img_tk)
+            green_img_array = cv.merge((r, g, b))
+            green_img = Image.fromarray(green_img_array)
+            green_img_tk = ImageTk.PhotoImage(image=green_img)
+            green_mask_label.config(image=green_img_tk)
 
         pwm_label.config(text="PWM Throttle: " + str(throttle_pwm))
         mode_label.config(text="Mode: " + mode)
