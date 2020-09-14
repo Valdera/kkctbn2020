@@ -19,8 +19,8 @@ mode = "NONE"
 
 def add_slider(text, from_, to_, resolution, master, default=0):
     frame = Tkinter.Frame(master=master)
-    label = Tkinter.Label(frame, text=text, fg='black', font=("Helvetica"))
-    label.grid(row=1, column=2, padx=10, pady=0)
+    label = Tkinter.Label(frame, text=text, fg='black', font=("Helvetica", 12))
+    label.grid(row=1, column=1, padx=10, pady=10)
     scale = Tkinter.Scale(frame, from_=from_, to_=to_, resolution=resolution, orient=Tkinter.HORIZONTAL, length=300)
     scale.set(default)
     scale.grid(row=1, column=2, padx=10, pady=0)
