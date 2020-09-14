@@ -97,12 +97,12 @@ if __name__ == '__main__':
     red_high_val = add_slider('RED H-VAL', 0, 255, 1, slider_frame1, 255)
 
     slider_frame2 = Tkinter.Frame(master=master)
-    green_low_hue = add_slider('GREEN L-HUE', 0, 255, 1, slider_frame1, 69)
-    green_low_sat = add_slider('GREEN L-SAT', 0, 255, 1, slider_frame1, 43)
-    green_low_val = add_slider('GREEN L-VAL', 0, 255, 1, slider_frame1, 0)
-    green_high_hue = add_slider('GREEN H-HUE', 0, 255, 1, slider_frame1, 99)
-    green_high_sat = add_slider('GREEN H-SAT', 0, 255, 1, slider_frame1, 255)
-    green_high_val = add_slider('GREEN H-VAL', 0, 255, 1, slider_frame1, 255)
+    green_low_hue = add_slider('GREEN L-HUE', 0, 255, 1, slider_frame2, 69)
+    green_low_sat = add_slider('GREEN L-SAT', 0, 255, 1, slider_frame2, 43)
+    green_low_val = add_slider('GREEN L-VAL', 0, 255, 1, slider_frame2, 0)
+    green_high_hue = add_slider('GREEN H-HUE', 0, 255, 1, slider_frame2, 99)
+    green_high_sat = add_slider('GREEN H-SAT', 0, 255, 1, slider_frame2, 255)
+    green_high_val = add_slider('GREEN H-VAL', 0, 255, 1, slider_frame2, 255)
 
     slider_frame1.grid(row=1, column=2)
     slider_frame2.grid(row=1, column=3)
