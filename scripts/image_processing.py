@@ -217,8 +217,8 @@ if __name__ == '__main__':
             published_green_mask.data = numpy.array(cv.imencode(".jpg", green_mask)[1]).tostring()
             green_mask_publisher.publish(published_green_mask)
 
-            proccessed_image = CompressedImage()
-            proccessed_image.header.stamp = rospy.Time.now()
-            proccessed_image.format = "jpeg"
-            proccessed_image.data = numpy.array(cv.imencode(".jpg", frame)[1]).tostring()
-            proccessed_image_publisher.publish(proccessed_image)
+            processed_image = CompressedImage()
+            processed_image.header.stamp = rospy.Time.now()
+            processed_image.format = "jpeg"
+            processed_image.data = numpy.array(cv.imencode(".jpg", frame)[1]).tostring()
+            processed_image_publisher.publish(processed_image)
