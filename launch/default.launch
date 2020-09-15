@@ -4,7 +4,7 @@
     <node pkg="kkctbn2020" name="receiver" type="receiver.py" output="screen"/>
     <node pkg="kkctbn2020" name="auto_control" type="auto_control.py" output="screen"/>
     <node pkg="kkctbn2020" name="image_processing" type="image_processing.py" output="screen"/>
-    <node pkg="kkctbn2020" name="setpoint" type="setpoint.py" outpot="screen"/>
+    <node pkg="kkctbn2020" name="setpoint" type="setpoint.py" output="screen"/>
     <node pkg="kkctbn2020" name="server" type="server.py" output="screen"/>
     <node pkg="kkctbn2020" name="throttle_pwm" type="throttle_pwm.py" output="screen"/>
     <node pkg="kkctbn2020" name="mode" type="mode.py" output="screen"/>
