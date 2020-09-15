@@ -36,13 +36,13 @@ def image_callback(img):
 def red_mask_callback(img):
     global red_mask
     mask_cv = numpy.fromstring(img.data, numpy.uint8)
-    mask_cv = numpy.imdecode(mask_cv, cv.IMREAD_COLOR)
+    mask_cv = cv.imdecode(mask_cv, cv.IMREAD_COLOR)
     red_mask = mask_cv
 
 def green_mask_callback(img):
     global green_mask
     mask_cv = numpy.fromstring(img.data, numpy.uint8)
-    mask_cv = numpy.imdecode(mask_cv, cv.IMREAD_COLOR)
+    mask_cv = cv.imdecode(mask_cv, cv.IMREAD_COLOR)
     green_mask = mask_cv
 
 def throttle_pwm_callback(pwm):
