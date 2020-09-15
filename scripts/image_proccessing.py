@@ -186,3 +186,39 @@ if __name__ == '__main__':
                     count_green += 1
                     if x > max_x:
                         max_x = x
+
+            # cv.imshow("Frame", frame)
+            # cv.imshow("red_mask", red_mask)
+            # cv.waitKey(30)
+            objectCount = ObjectCount()
+            objectCount.red = count_red
+            objectCount.green = count_green
+            object_count_publisher.publish(objectCount)
+
+            state = Float64()
+            state.data = min_x
+
+            if auto_control.state == AutoControl.AVOID_RED_AND_GREEN and count_green > 0:
+                state = Float64()
+                state.data = max_x - 640
+
+            state_publisher.publish(state)
+
+
+            published_red_mask = CompressedImage()
+            published_red_mask.header.stamp = rospy.Time.now()
+            published_red_mask.format = "jpeg"
+            published_red_mask.data = np.array(cv2.imencode(".jpg", red_mask)[1]).tostring()
+            red_mask_publisher.publish(published_red_mask)
+
+            published_green_mask = CompressedImage()
+            published_green_mask.header.stamp = rospy.Time.now()
+            published_green_mask.format = "jpeg"
+            published_green_mask.data = np.array(cv2.imencode(".jpg", green_mask)[1]).tostring()
+            green_mask_publisher.publish(published_green_mask)
+
+            proccessed_image = CompressedImage()
+            proccessed_image.header.stamp = rospy.Time.now()
+            proccessed_image.format = "jpeg"
+            proccessed_image.data = np.array(cv2.imencode(".jpg", frame)[1]).tostring()
+            proccessed_image_publisher.publish(proccessed_image)
