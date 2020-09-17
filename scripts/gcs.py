@@ -17,6 +17,13 @@ throttle_pwm = 0
 auto_ctrl = "NONE"
 mode = "NONE"
 
+def selectROI(event, x, y, flags, param):
+    global ori, mouseX, mouseY, inputMode, image_hsv, roi
+    if inputMode and event == cv.EVENT_LBUTTONDOWN:
+        # cv.circle(ori, (x,y), 4, (0,255,0), 2)
+        mouseX, mouseY = x,y
+        roi = image_hsv[mouseY-10:mouseY+10, mouseX-10:mouseX+10]
+
 def add_slider(text, from_, to_, resolution, master, default=0):
     frame = Tkinter.Frame(master=master)
     label = Tkinter.Label(frame, text=text, fg='black', font=("Helvetica", 12))
@@ -65,6 +72,20 @@ def auto_control_callback(msg):
     else:
         auto_ctrl = "AVOID WHAT"
 
+red_low_hue = 0
+red_low_sat = 0
+red_low_val = 0
+red_high_hue = 0
+red_high_sat = 0
+red_high_val = 0
+
+green_low_hue = 0
+green_low_sat = 0
+green_low_val = 0
+green_high_hue = 0
+green_high_sat = 0
+green_high_val = 0
+
 if __name__ == '__main__':
     # Initialize gcs node
     rospy.init_node('gcs', anonymous=True)
@@ -89,23 +110,24 @@ if __name__ == '__main__':
     brightness = add_slider('Brightness', -127, 127, 1, slider_frame1, -2)
     gamma = add_slider('Gamma', 0.1, 3, 0.1, slider_frame1, 1)
     roi_y = add_slider('ROI Y', 0, 480, 1, slider_frame1, 5)
-    red_low_hue = add_slider('RED L-HUE', 0, 255, 1, slider_frame1, 118)
-    red_low_sat = add_slider('RED L-SAT', 0, 255, 1, slider_frame1, 77)
-    red_low_val = add_slider('RED L-VAL', 0, 255, 1, slider_frame1, 0)
-    red_high_hue = add_slider('RED H-HUE', 0, 255, 1, slider_frame1, 186)
-    red_high_sat = add_slider('RED H-SAT', 0, 255, 1, slider_frame1, 255)
-    red_high_val = add_slider('RED H-VAL', 0, 255, 1, slider_frame1, 255)
 
-    slider_frame2 = Tkinter.Frame(master=master)
-    green_low_hue = add_slider('GREEN L-HUE', 0, 255, 1, slider_frame2, 69)
-    green_low_sat = add_slider('GREEN L-SAT', 0, 255, 1, slider_frame2, 43)
-    green_low_val = add_slider('GREEN L-VAL', 0, 255, 1, slider_frame2, 0)
-    green_high_hue = add_slider('GREEN H-HUE', 0, 255, 1, slider_frame2, 99)
-    green_high_sat = add_slider('GREEN H-SAT', 0, 255, 1, slider_frame2, 255)
-    green_high_val = add_slider('GREEN H-VAL', 0, 255, 1, slider_frame2, 255)
+    # red_low_hue = add_slider('RED L-HUE', 0, 255, 1, slider_frame1, 118)
+    # red_low_sat = add_slider('RED L-SAT', 0, 255, 1, slider_frame1, 77)
+    # red_low_val = add_slider('RED L-VAL', 0, 255, 1, slider_frame1, 0)
+    # red_high_hue = add_slider('RED H-HUE', 0, 255, 1, slider_frame1, 186)
+    # red_high_sat = add_slider('RED H-SAT', 0, 255, 1, slider_frame1, 255)
+    # red_high_val = add_slider('RED H-VAL', 0, 255, 1, slider_frame1, 255)
+
+    # slider_frame2 = Tkinter.Frame(master=master)
+    # green_low_hue = add_slider('GREEN L-HUE', 0, 255, 1, slider_frame2, 69)
+    # green_low_sat = add_slider('GREEN L-SAT', 0, 255, 1, slider_frame2, 43)
+    # green_low_val = add_slider('GREEN L-VAL', 0, 255, 1, slider_frame2, 0)
+    # green_high_hue = add_slider('GREEN H-HUE', 0, 255, 1, slider_frame2, 99)
+    # green_high_sat = add_slider('GREEN H-SAT', 0, 255, 1, slider_frame2, 255)
+    # green_high_val = add_slider('GREEN H-VAL', 0, 255, 1, slider_frame2, 255)
 
     slider_frame1.grid(row=1, column=2)
-    slider_frame2.grid(row=1, column=3)
+    # slider_frame2.grid(row=1, column=3)
 
     info_frame = Tkinter.Frame(master=master)
     pwm_label = Tkinter.Label(info_frame, text="PWM Throttle: " + str(throttle_pwm), fg='black', font=("Helvetica", 12))
@@ -119,22 +141,25 @@ if __name__ == '__main__':
 
     info_frame.grid(row=1, column=1)
 
-    ori_label = Tkinter.Label(master=master, image=None)
-    ori_label.grid(row=2, column=1)
+    # ori_label = Tkinter.Label(master=master, image=None)
+    # ori_label.grid(row=2, column=1)
 
     red_mask_label = Tkinter.Label(master=master, image=None)
-    red_mask_label.grid(row=2, column=2)
+    red_mask_label.grid(row=2, column=1)
 
     green_mask_label = Tkinter.Label(master=master, image=None)
-    green_mask_label.grid(row=2, column=3)
+    green_mask_label.grid(row=2, column=2)
+
+    cv.namedWindow("clahe")
+    cv.setMouseCallback("clahe", selectROI)
 
     while not rospy.is_shutdown():
         if ori is not None:
             b, g, r = cv.split(ori)
             ori_img_array = cv.merge((r, g, b))
             ori_img = Image.fromarray(ori_img_array)
-            ori_img_tk = ImageTk.PhotoImage(image=ori_img)
-            ori_label.config(image=ori_img_tk)
+            # ori_img_tk = ImageTk.PhotoImage(image=ori_img)
+            # ori_label.config(image=ori_img_tk)
 
         if red_mask is not None:
             b, g, r = cv.split(red_mask)
@@ -156,21 +181,24 @@ if __name__ == '__main__':
         master.update()
 
         cfg = Config()
-        cfg.red_low_hue = red_low_hue.get()
-        cfg.red_low_sat = red_low_sat.get()
-        cfg.red_low_val = red_low_val.get()
-        cfg.red_high_hue = red_high_hue.get()
-        cfg.red_high_sat = red_high_sat.get()
-        cfg.red_high_val = red_high_val.get()
-        cfg.green_low_hue = green_low_hue.get()
-        cfg.green_low_sat = green_low_sat.get()
-        cfg.green_low_val = green_low_val.get()
-        cfg.green_high_hue = green_high_hue.get()
-        cfg.green_high_sat = green_high_sat.get()
-        cfg.green_high_val = green_high_val.get()
+        cfg.red_low_hue = red_low_hue
+        cfg.red_low_sat = red_low_sat
+        cfg.red_low_val = red_low_val
+        cfg.red_high_hue = red_high_hue
+        cfg.red_high_sat = red_high_sat
+        cfg.red_high_val = red_high_val
+        cfg.green_low_hue = green_low_hue
+        cfg.green_low_sat = green_low_sat
+        cfg.green_low_val = green_low_val
+        cfg.green_high_hue = green_high_hue
+        cfg.green_high_sat = green_high_sat
+        cfg.green_high_val = green_high_val
         cfg.brightness = brightness.get()
         cfg.contrast = contrast.get()
         cfg.gamma = gamma.get()
         cfg.roi_y = roi_y.get()
 
         cfg_publisher.publish(cfg)
+
+        cv.imshow("clahe", ori)
+        key = cv.waitKey(1) & 0xFF
