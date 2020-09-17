@@ -1,0 +1,5 @@
+<launch>
+	<node pkg="kkctbn2020" name="gcs" type="gcs.py" output="screen"/>
+    <node pkg="kkctbn2020" name="image_processing" type="image_processing.py" output="screen"/>
+    <node pkg="kkctbn2020" name="receiver" type="receiver.py" output="screen"/>
+</launch>
