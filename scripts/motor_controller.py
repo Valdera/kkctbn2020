@@ -11,31 +11,31 @@ mode = Mode()
 autoControl = AutoControl()
 autoControlBefore = AutoControl()
 control_effort = float()
-currentThrottlePwm = 1700
-pwm_override = False
+currentThrottlePwm = 1550
+# pwm_override = False
 
-def pwmOverrideCallback(msg):
-    global pwm_override
-    pwm_override = msg.data
+# def pwmOverrideCallback(msg):
+#     global pwm_override
+#     pwm_override = msg.data
 
-def pwmCallback(msg):
-    global currentThrottlePwm
-    currentThrottlePwm = msg.data
+# def pwmCallback(msg):
+#     global currentThrottlePwm
+#     currentThrottlePwm = msg.data
     
-def joyCallback(msg):
-    global currentThrottlePwm
+# def joyCallback(msg):
+#     global currentThrottlePwm
     
-    if (msg.buttons[0] == 1):
-        currentThrottlePwm += 50
+#     if (msg.buttons[0] == 1):
+#         currentThrottlePwm += 50
         
-    if (msg.buttons[2] == 1):
-        currentThrottlePwm -= 50
+#     if (msg.buttons[2] == 1):
+#         currentThrottlePwm -= 50
         
-    if (currentThrottlePwm > 1900):
-        currentThrottlePwm = 1900
+#     if (currentThrottlePwm > 1900):
+#         currentThrottlePwm = 1900
 
-    if (currentThrottlePwm < 1600):
-        currentThrottlePwm = 1600
+#     if (currentThrottlePwm < 1600):
+#         currentThrottlePwm = 1600
     
 def controlEffortCallback(msg):
     global control_effort
@@ -65,6 +65,8 @@ def objectCountCallback(msg):
         rcin = OverrideRCIn()
         motor1 = 0
         motor2 = 1
+        servo1 = 2
+        servo2 = 3
         
         if (autoControl.state == AutoControl.AVOID_RED_AND_GREEN):
             if (msg.red > 0):
@@ -85,19 +87,32 @@ def objectCountCallback(msg):
                 else:
                     rcin.channels[motor1] = currentThrottlePwm
                 rcin.channels[motor2] = 1650
+
+        # ini cuma avoid RED
         else:
             if (msg.red > 0):
                 for i in range(8):
                     rcin.channels[i] = 0
                 rcin.channels[motor1] = currentThrottlePwm
-                rcin.channels[motor2] = 1500 + control_effort
-                if (rcin.channels[motor2] > 2200):
-                    rcin.channels[motor2] = 2200
-                elif (rcin.channels[motor2] < 800):
-                    rcin.channels[motor2] = 800
+                rcin.channels[motor2] = currentThrottlePwm
+
+                rcin.channels[servo1] = 1500 + control_effort
+                rcin.channels[servo2] = 1500 + control_effort
+
+                if (rcin.channels[servo1] > 2200):
+                    rcin.channels[servo2] = 2200
+                    rcin.channels[servo1] = 2200
+
+                elif (rcin.channels[servo2] < 800):
+                    rcin.channels[servo2] = 2200
+                    rcin.channels[servo1] = 2200
+
+            # kalo ga ketemu, belok kiri buat cari
             else:
                 rcin.channels[motor1] = currentThrottlePwm
-                rcin.channels[motor2] = 1650
+                rcin.channels[motor2] = currentThrottlePwm
+                rcin.channels[servo1] = 1650
+                rcin.channels[servo2] = 1650
         
         override_publisher.publish(rcin)
         
@@ -107,17 +122,17 @@ if __name__ == '__main__':
     
     override_publisher = rospy.Publisher("/mavros/rc/override", OverrideRCIn, queue_size=8)
     
-    pwm_subscriber = rospy.Subscriber("/makarax/pwm_throttle", UInt16, pwmCallback)
+    # pwm_subscriber = rospy.Subscriber("/makarax/pwm_throttle", UInt16, pwmCallback)
     
     mode_subscriber = rospy.Subscriber("/makarax/mode", Mode, modeCallback)
     
-    pwm_override_subscriber = rospy.Subscriber("/makarax/pwm_override", Bool, pwmOverrideCallback)
+    # pwm_override_subscriber = rospy.Subscriber("/makarax/pwm_override", Bool, pwmOverrideCallback)
     
     control_effort_subscriber = rospy.Subscriber("control_effort", Float64, controlEffortCallback)
     
     red_count_subscriber = rospy.Subscriber("/makarax/object/count", ObjectCount, objectCountCallback)
     
-    joy_subscriber = rospy.Subscriber("joy", Joy, joyCallback)
+    # joy_subscriber = rospy.Subscriber("joy", Joy, joyCallback)
     
     auto_control_subscriber = rospy.Subscriber("/makarax/auto_control", AutoControl, autoControlCallback)
     
