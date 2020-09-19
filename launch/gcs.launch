@@ -1,6 +1,4 @@
 <launch>
 	<node pkg="kkctbn2020" name="gcs" type="gcs.py" output="screen"/>
-	<!-- node name="rqt_reconfigure" pkg="rqt_reconfigure" type="rqt_reconfigure" / -->
-	<node pkg="kkctbn2020" name="receiver" type="receiver.py" output="screen"/>
-    <node pkg="kkctbn2020" name="image_processing" type="image_processing.py" output="screen"/>
+	<node name="rqt_reconfigure" pkg="rqt_reconfigure" type="rqt_reconfigure" />
 </launch>
