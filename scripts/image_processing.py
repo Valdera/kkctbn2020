@@ -89,23 +89,7 @@ if __name__ == '__main__':
         bridge = CvBridge()
         ori = bridge.imgmsg_to_cv2(data)
 
-        brightness = cfg.brightness
-        contrast = cfg.contrast
-        gamma = cfg.gamma
-
         frame = ori.copy()
-
-        if gamma == 0:
-            pass
-        else:
-            frame = adjust_gamma(frame, gamma=gamma)
-
-        # Change contrast and brightness
-        frame = numpy.int16(frame)
-        frame = frame * (1 + contrast / 127) - contrast + brightness
-        frame = numpy.clip(frame, 0, 255)
-        frame = numpy.uint8(frame)
-
 
         height, width = frame.shape[:2]
 
@@ -131,7 +115,7 @@ if __name__ == '__main__':
         red_mask = cv.inRange(hsv, low_red, high_red)
 
         # Detect Contours
-        _, contours, _ = cv.findContours(red_mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)[-2:]
+        contours, _ = cv.findContours(red_mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)[-2:]
         min_x = 9999
         for cnt in contours:
             area = cv.contourArea(cnt)
@@ -187,38 +171,38 @@ if __name__ == '__main__':
                     if x > max_x:
                         max_x = x
 
-            # cv.imshow("Frame", frame)
-            # cv.imshow("red_mask", red_mask)
-            # cv.waitKey(30)
-            objectCount = ObjectCount()
-            objectCount.red = count_red
-            objectCount.green = count_green
-            object_count_publisher.publish(objectCount)
-
+        # cv.imshow("Frame", frame)
+        # cv.imshow("red_mask", red_mask)
+        # cv.waitKey(30)
+        objectCount = ObjectCount()
+        objectCount.red = count_red
+        objectCount.green = count_green
+        object_count_publisher.publish(objectCount)
+        
+        state = Float64()
+        state.data = min_x
+    
+        if auto_ctrl.state == AutoControl.AVOID_RED_AND_GREEN and count_green > 0:
             state = Float64()
-            state.data = min_x
+            state.data = max_x - 640
 
-            if auto_ctrl.state == AutoControl.AVOID_RED_AND_GREEN and count_green > 0:
-                state = Float64()
-                state.data = max_x - 640
+        state_publisher.publish(state)
+        
 
-            state_publisher.publish(state)
+        published_red_mask = CompressedImage()
+        published_red_mask.header.stamp = rospy.Time.now()
+        published_red_mask.format = "jpeg"
+        published_red_mask.data = numpy.array(cv.imencode(".jpg", red_mask)[1]).tostring()
+        red_mask_publisher.publish(published_red_mask)
 
+        published_green_mask = CompressedImage()
+        published_green_mask.header.stamp = rospy.Time.now()
+        published_green_mask.format = "jpeg"
+        published_green_mask.data = numpy.array(cv.imencode(".jpg", green_mask)[1]).tostring()
+        green_mask_publisher.publish(published_green_mask)
 
-            published_red_mask = CompressedImage()
-            published_red_mask.header.stamp = rospy.Time.now()
-            published_red_mask.format = "jpeg"
-            published_red_mask.data = numpy.array(cv.imencode(".jpg", red_mask)[1]).tostring()
-            red_mask_publisher.publish(published_red_mask)
-
-            published_green_mask = CompressedImage()
-            published_green_mask.header.stamp = rospy.Time.now()
-            published_green_mask.format = "jpeg"
-            published_green_mask.data = numpy.array(cv.imencode(".jpg", green_mask)[1]).tostring()
-            green_mask_publisher.publish(published_green_mask)
-
-            processed_image = CompressedImage()
-            processed_image.header.stamp = rospy.Time.now()
-            processed_image.format = "jpeg"
-            processed_image.data = numpy.array(cv.imencode(".jpg", frame)[1]).tostring()
-            processed_image_publisher.publish(processed_image)
+        processed_image = CompressedImage()
+        processed_image.header.stamp = rospy.Time.now()
+        processed_image.format = "jpeg"
+        processed_image.data = numpy.array(cv.imencode(".jpg", frame)[1]).tostring()
+        processed_image_publisher.publish(processed_image)
