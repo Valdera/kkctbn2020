@@ -43,11 +43,11 @@ def selectROI(event, x, y, flags, params):
         mouseX, mouseY = x, y
         roi = image_hsv[mouseY-10:mouseY+10, mouseX-10:mouseX+10]
         detect = "RED"
-    # elif inputMode and event == cv.EVENT_RBUTTONDOWN:
+    elif inputMode and event == cv.EVENT_RBUTTONDOWN:
         # cv.circle(new_img, (x, y), 4, (0, 255, 0), 2)
-        # mouseX, mouseY = x, y
-        # roi = image_hsv[mouseY-10:mouseY+10, mouseX-10:mouseX+10]
-        # detect = "GREEN"
+        mouseX, mouseY = x, y
+        roi = image_hsv[mouseY-10:mouseY+10, mouseX-10:mouseX+10]
+        detect = "GREEN"
 
 def image_callback(img):
     global ori
@@ -184,7 +184,6 @@ if __name__ == '__main__':
         master.update()
 
         if mouseX is not None:
-            print("OK")
             hue = numpy.mean(roi[:,:, 0])
             sat = numpy.mean(roi[:,:, 1])
             val = numpy.mean(roi[:,:, 2])
@@ -196,13 +195,13 @@ if __name__ == '__main__':
             val_high = val + 25
 
             if detect == "RED":
-                print("RED OK")
                 red_low_hue = hue_low
                 red_low_sat = sat_low
                 red_low_val = val_low
                 red_high_hue = hue_high
                 red_high_sat = sat_high
                 red_high_val = val_high
+                detect = ""
             elif detect == "GREEN":
                 green_low_hue = hue_low
                 green_low_sat = sat_low
@@ -210,6 +209,7 @@ if __name__ == '__main__':
                 green_high_hue = hue_high
                 green_high_sat = sat_high
                 green_high_val = val_high
+                detect = ""
                 
         cv.waitKey(30)
         cfg = Config()
