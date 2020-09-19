@@ -111,6 +111,7 @@ if __name__ == '__main__':
     brightness = add_slider('Brightness', -127, 127, 1, slider_frame1, -2)
     gamma = add_slider('Gamma', 0.1, 3, 0.1, slider_frame1, 1)
     roi_y = add_slider('ROI Y', 0, 480, 1, slider_frame1, 5)
+    adjust = add_slider('Adjust', 0, 200, 1, slider_frame1, 50)
 
     red_low_hue = 118    # add_slider('RED L-HUE', 0, 255, 1, slider_frame1, 118)
     red_low_sat = 77     # add_slider('RED L-SAT', 0, 255, 1, slider_frame1, 77)
@@ -187,12 +188,12 @@ if __name__ == '__main__':
             hue = numpy.mean(roi[:,:, 0])
             sat = numpy.mean(roi[:,:, 1])
             val = numpy.mean(roi[:,:, 2])
-            hue_low = hue - 25
-            hue_high = hue + 25
-            sat_low = sat - 25
-            sat_high = sat + 25
-            val_low = val - 25
-            val_high = val + 25
+            hue_low = hue - adjust.get()
+            hue_high = hue + adjust.get()
+            sat_low = sat - adjust.get()
+            sat_high = sat + adjust.get()
+            val_low = val - adjust.get()
+            val_high = val + adjust.get()
 
             if detect == "RED":
                 red_low_hue = hue_low

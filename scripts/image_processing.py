@@ -128,8 +128,11 @@ if __name__ == '__main__':
             y = int(M["m01"] / M["m00"])
 
             if area > MIN_AREA and y > roi_y:
-                cv.drawContours(frame, [approx], 0, (0, 0, 0), 5)
-                cv.circle(frame, (x, y), 5, (0, 255, 0), -1)
+                # cv.drawContours(frame, [approx], 0, (0, 0, 0), 5)
+                c = max(contours, key = cv.contourArea)
+                a,b,w,h = cv.boundingRect(c)
+                cv.rectangle(frame, (a, b), (a + w, b + h), (0, 0, 255), 2)
+                cv.circle(frame, (x, y), 5, (0, 0, 255), -1)
                 if 7 <= len(approx) < 20:
                     cv.putText(frame, "Circle Red", (x, y), cv.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255))
                     count_red += 1
@@ -163,10 +166,13 @@ if __name__ == '__main__':
             y = int(M["m01"] / M["m00"])
 
             if area > MIN_AREA and y > roi_y:
-                cv.drawContours(frame, [approx], 0, (0, 0, 0), 5)
+                # cv.drawContours(frame, [approx], 0, (0, 0, 0), 5)
+                c = max(contours, key = cv.contourArea)
+                a,b,w,h = cv.boundingRect(c)
+                cv.rectangle(frame, (a, b), (a + w, b + h), (0, 255,0), 2)
                 cv.circle(frame, (x, y), 5, (0, 255, 0), -1)
                 if 7 <= len(approx) < 20:
-                    cv.putText(frame, "Circle green", (x, y), cv.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255))
+                    cv.putText(frame, "Circle green", (x, y), cv.FONT_HERSHEY_COMPLEX, 0.5, (0, 255, 0))
                     count_green += 1
                     if x > max_x:
                         max_x = x
