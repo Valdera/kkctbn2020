@@ -131,7 +131,7 @@ if __name__ == '__main__':
         red_mask = cv.inRange(hsv, low_red, high_red)
 
         # Detect Contours
-        _, contours, _ = cv.findContours(red_mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)[-2:]
+        contours, _ = cv.findContours(red_mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)[-2:]
         min_x = 9999
         for cnt in contours:
             area = cv.contourArea(cnt)
@@ -144,8 +144,11 @@ if __name__ == '__main__':
             y = int(M["m01"] / M["m00"])
 
             if area > MIN_AREA and y > roi_y:
-                cv.drawContours(frame, [approx], 0, (0, 0, 0), 5)
-                cv.circle(frame, (x, y), 5, (0, 255, 0), -1)
+                # cv.drawContours(frame, [approx], 0, (0, 0, 0), 5)
+                c = max(contours, key = cv.contourArea)
+                a,b,w,h = cv.boundingRect(c)
+                cv.rectangle(frame, (a, b), (a + w, b + h), (0, 0, 255), 2)
+                cv.circle(frame, (x, y), 5, (0, 0, 255), -1)
                 if 7 <= len(approx) < 20:
                     cv.putText(frame, "Circle Red", (x, y), cv.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255))
                     count_red += 1
@@ -179,46 +182,49 @@ if __name__ == '__main__':
             y = int(M["m01"] / M["m00"])
 
             if area > MIN_AREA and y > roi_y:
-                cv.drawContours(frame, [approx], 0, (0, 0, 0), 5)
+                # cv.drawContours(frame, [approx], 0, (0, 0, 0), 5)
+                c = max(contours, key = cv.contourArea)
+                a,b,w,h = cv.boundingRect(c)
+                cv.rectangle(frame, (a, b), (a + w, b + h), (0, 255,0), 2)
                 cv.circle(frame, (x, y), 5, (0, 255, 0), -1)
                 if 7 <= len(approx) < 20:
-                    cv.putText(frame, "Circle green", (x, y), cv.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255))
+                    cv.putText(frame, "Circle green", (x, y), cv.FONT_HERSHEY_COMPLEX, 0.5, (0, 255, 0))
                     count_green += 1
                     if x > max_x:
                         max_x = x
 
-            # cv.imshow("Frame", frame)
-            # cv.imshow("red_mask", red_mask)
-            # cv.waitKey(30)
-            objectCount = ObjectCount()
-            objectCount.red = count_red
-            objectCount.green = count_green
-            object_count_publisher.publish(objectCount)
-
+        # cv.imshow("Frame", frame)
+        # cv.imshow("red_mask", red_mask)
+        # cv.waitKey(30)
+        objectCount = ObjectCount()
+        objectCount.red = count_red
+        objectCount.green = count_green
+        object_count_publisher.publish(objectCount)
+        
+        state = Float64()
+        state.data = min_x
+    
+        if auto_ctrl.state == AutoControl.AVOID_RED_AND_GREEN and count_green > 0:
             state = Float64()
-            state.data = min_x
+            state.data = max_x - 640
 
-            if auto_ctrl.state == AutoControl.AVOID_RED_AND_GREEN and count_green > 0:
-                state = Float64()
-                state.data = max_x - 640
+        state_publisher.publish(state)
+        
 
-            state_publisher.publish(state)
+        published_red_mask = CompressedImage()
+        published_red_mask.header.stamp = rospy.Time.now()
+        published_red_mask.format = "jpeg"
+        published_red_mask.data = numpy.array(cv.imencode(".jpg", red_mask)[1]).tostring()
+        red_mask_publisher.publish(published_red_mask)
 
+        published_green_mask = CompressedImage()
+        published_green_mask.header.stamp = rospy.Time.now()
+        published_green_mask.format = "jpeg"
+        published_green_mask.data = numpy.array(cv.imencode(".jpg", green_mask)[1]).tostring()
+        green_mask_publisher.publish(published_green_mask)
 
-            published_red_mask = CompressedImage()
-            published_red_mask.header.stamp = rospy.Time.now()
-            published_red_mask.format = "jpeg"
-            published_red_mask.data = numpy.array(cv.imencode(".jpg", red_mask)[1]).tostring()
-            red_mask_publisher.publish(published_red_mask)
-
-            published_green_mask = CompressedImage()
-            published_green_mask.header.stamp = rospy.Time.now()
-            published_green_mask.format = "jpeg"
-            published_green_mask.data = numpy.array(cv.imencode(".jpg", green_mask)[1]).tostring()
-            green_mask_publisher.publish(published_green_mask)
-
-            processed_image = CompressedImage()
-            processed_image.header.stamp = rospy.Time.now()
-            processed_image.format = "jpeg"
-            processed_image.data = numpy.array(cv.imencode(".jpg", frame)[1]).tostring()
-            processed_image_publisher.publish(processed_image)
+        processed_image = CompressedImage()
+        processed_image.header.stamp = rospy.Time.now()
+        processed_image.format = "jpeg"
+        processed_image.data = numpy.array(cv.imencode(".jpg", frame)[1]).tostring()
+        processed_image_publisher.publish(processed_image)
