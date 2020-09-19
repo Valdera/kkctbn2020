@@ -89,7 +89,23 @@ if __name__ == '__main__':
         bridge = CvBridge()
         ori = bridge.imgmsg_to_cv2(data)
 
+        brightness = cfg.brightness
+        contrast = cfg.contrast
+        gamma = cfg.gamma
+
         frame = ori.copy()
+
+        if gamma == 0:
+            pass
+        else:
+            frame = adjust_gamma(frame, gamma=gamma)
+
+        # Change contrast and brightness
+        frame = numpy.int16(frame)
+        frame = frame * (1 + contrast / 127) - contrast + brightness
+        frame = numpy.clip(frame, 0, 255)
+        frame = numpy.uint8(frame)
+
 
         height, width = frame.shape[:2]
 
