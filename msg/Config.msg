@@ -1,13 +1,13 @@
-uint8 red_low_hue
-uint8 red_low_sat
-uint8 red_low_val
-uint8 red_high_hue
-uint8 red_high_sat
-uint8 red_high_val
+float64 red_low_hue
+float64 red_low_sat
+float64 red_low_val
+float64 red_high_hue
+float64 red_high_sat
+float64 red_high_val
 
-uint8 green_low_hue
-uint8 green_low_sat
-uint8 green_low_val
+float64 green_low_hue
+float64 green_low_sat
+float64 green_low_val
 uint8 green_high_hue
 uint8 green_high_sat
 uint8 green_high_val
