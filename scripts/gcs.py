@@ -26,14 +26,12 @@ roi = None
 def nothing(num):
     pass
 
-def add_slider(text, from_, to_, resolution, master, default=0):
-    frame = Tkinter.Frame(master=master)
+def add_slider(text, from_, to_, resolution, frame, row, default=0):
     label = Tkinter.Label(frame, text=text, fg='black', font=("Helvetica", 12))
-    label.grid(row=1, column=1, padx=10, pady=10)
-    scale = Tkinter.Scale(frame, from_=from_, to_=to_, resolution=resolution, orient=Tkinter.HORIZONTAL, length=300)
+    label.grid(row=row, column=0, padx=5, sticky='se', pady=2)
+    scale = Tkinter.Scale(frame, from_=from_, to=to_, resolution=resolution, orient=Tkinter.HORIZONTAL, length=300)
     scale.set(default)
-    scale.grid(row=1, column=2, padx=10, pady=0)
-    frame.pack()
+    scale.grid(row=row, column=1, padx=5, sticky='n', pady=0)
     return scale
 
 def selectROI(event, x, y, flags, params):
@@ -104,15 +102,35 @@ if __name__ == '__main__':
 
     master = Tkinter.Tk()
     master.title("Config")
+    
+    master_width = master.winfo_screenwidth()
+    master_height = master.winfo_screenheight()
 
+    master.geometry(str(master_width) + "x" + str(master_height))
+
+    # Info
+    info_frame = Tkinter.Frame(master=master)
+    pwm_label = Tkinter.Label(info_frame, text="PWM Throttle: " + str(throttle_pwm), fg='black', font=("Helvetica", 12))
+    pwm_label.pack()
+
+    mode_label = Tkinter.Label(info_frame, text="Mode: " + mode, fg='black', font=("Helvetica", 12))
+    mode_label.pack()
+
+    auto_label = Tkinter.Label(info_frame, text="Auto: " + auto_ctrl, fg='black', font=("Helvetica", 12))
+    auto_label.pack()
+
+    info_frame.grid(row=1, column=1, pady=(0, 10))
+
+    # Set up slider
     slider_frame1 = Tkinter.Frame(master=master)
 
-    contrast = add_slider('Contrast', -255, 255, 1, slider_frame1, 0)
-    brightness = add_slider('Brightness', -127, 127, 1, slider_frame1, -2)
-    gamma = add_slider('Gamma', 0.1, 3, 0.1, slider_frame1, 1)
-    roi_y = add_slider('ROI Y', 0, 480, 1, slider_frame1, 5)
-    adjust = add_slider('Adjust', 0, 200, 1, slider_frame1, 50)
+    contrast = add_slider('Contrast', -255, 255, 1, slider_frame1, 1, 0)
+    brightness = add_slider('Brightness', -127, 127, 1, slider_frame1, 2, -2)
+    gamma = add_slider('Gamma', 0.1, 3, 0.1, slider_frame1, 3, 1)
+    roi_y = add_slider('ROI Y', 0, 480, 1, slider_frame1, 4, 5)
+    adjust = add_slider('Adjust', 0, 200, 1, slider_frame1, 5, 50)
 
+    # Set Default Value
     red_low_hue = 118    # add_slider('RED L-HUE', 0, 255, 1, slider_frame1, 118)
     red_low_sat = 77     # add_slider('RED L-SAT', 0, 255, 1, slider_frame1, 77)
     red_low_val = 0      # add_slider('RED L-VAL', 0, 255, 1, slider_frame1, 0)
@@ -130,18 +148,6 @@ if __name__ == '__main__':
 
     slider_frame1.grid(row=1, column=2)
     # slider_frame2.grid(row=1, column=3)
-
-    info_frame = Tkinter.Frame(master=master)
-    pwm_label = Tkinter.Label(info_frame, text="PWM Throttle: " + str(throttle_pwm), fg='black', font=("Helvetica", 12))
-    pwm_label.pack()
-
-    mode_label = Tkinter.Label(info_frame, text="Mode: " + mode, fg='black', font=("Helvetica", 12))
-    mode_label.pack()
-
-    auto_label = Tkinter.Label(info_frame, text="Auto: " + auto_ctrl, fg='black', font=("Helvetica", 12))
-    auto_label.pack()
-
-    info_frame.grid(row=1, column=1)
 
     # ori_label = Tkinter.Label(master=master, image=None)
     # ori_label.grid(row=2, column=1)
