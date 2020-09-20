@@ -21,14 +21,14 @@ def compass_callback(degree):
     current_compass = degree
 
     # Initialize start degree
-    if (init_compass is None):
+    if init_compass is None:
         init_compass = degree
         # Set the tolerance degree to push forward (89 - 91)
         upper_tolerance = init_compass + degree_decision + 1.0
         lower_tolerance = init_compass + degree_decision - 1.0
 
     # If between the tolerance degree just push forward
-    if (current_compass >= lower_tolerance and current_compass <= upper_tolerance):
+    if current_compass >= lower_tolerance and current_compass <= upper_tolerance:
         published_data.data = True
 
     # if on AutoControl mode, publish the data
