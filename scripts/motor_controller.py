@@ -12,15 +12,15 @@ autoControl = AutoControl()
 autoControlBefore = AutoControl()
 control_effort = float()
 currentThrottlePwm = 1700
-pwm_override = False
+just_forward = False
 
-def pwmOverrideCallback(msg):
-    global pwm_override
-    pwm_override = msg.data
+def just_forward_callback(msg):
+     global just_forward
+     just_forward = msg.data
 
 def pwmCallback(msg):
-    global currentThrottlePwm
-    currentThrottlePwm = msg.data
+     global currentThrottlePwm
+     currentThrottlePwm = msg.data
     
 def joyCallback(msg):
     global currentThrottlePwm
@@ -70,7 +70,7 @@ def objectCountCallback(msg):
             if (msg.red > 0):
                 for i in range(8):
                     rcin.channels[i] = 0
-                if (pwm_override):
+                if (just_forward):
                     rcin.channels[motor1] = 1900
                 else:
                     rcin.channels[motor1] = currentThrottlePwm
@@ -80,7 +80,7 @@ def objectCountCallback(msg):
                 elif (rcin.channels[motor1] < 800):
                     rcin.channels[motor1] = 800
             else:
-                if (pwm_override):
+                if (just_forward):
                     rcin.channels[motor1] = 1900
                 else:
                     rcin.channels[motor1] = currentThrottlePwm
@@ -111,7 +111,8 @@ if __name__ == '__main__':
     
     mode_subscriber = rospy.Subscriber("/makarax/mode", Mode, modeCallback)
     
-    pwm_override_subscriber = rospy.Subscriber("/makarax/pwm_override", Bool, pwmOverrideCallback)
+    # pwm_override_subscriber = rospy.Subscriber("/makarax/pwm_override", Bool, pwmOverrideCallback)
+    just_forward_subscriber = rospy.Subscriber("/makarax/pwm_just_forward", Bool, just_forward_callback)
     
     control_effort_subscriber = rospy.Subscriber("control_effort", Float64, controlEffortCallback)
     
