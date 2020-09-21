@@ -39,14 +39,14 @@ def compass_callback(degree):
 
     pwm_just_forward_publisher.publish(published_data)
 
-    #  # if on AutoControl mode, publish the data
-    #  if auto_control.state == AutoControl.AVOID_RED_AND_GREEN or auto_control.state == AutoControl.AVOID_RED:
-    #      pwm_just_forward_publisher.publish(published_data)
-    #  # If on manual mode, reset everything
-    #  elif auto_control.state == AutoControl.MANUAL:
-    #      init_compass = None
-    #      published_data.data = False
-    #      pwm_just_forward_publisher.publish(published_data)
+     # if on AutoControl mode, publish the data
+     if auto_control.state == AutoControl.AVOID_RED_AND_GREEN or auto_control.state == AutoControl.AVOID_RED:
+         pwm_just_forward_publisher.publish(published_data)
+     # If on manual mode, reset everything
+     elif auto_control.state == AutoControl.MANUAL:
+         init_compass = None
+         published_data.data = False
+         pwm_just_forward_publisher.publish(published_data)
 
 if __name__ == '__main__':
     rospy.init_node("pwm_just_forward")
