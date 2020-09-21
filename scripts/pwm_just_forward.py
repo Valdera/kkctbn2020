@@ -37,8 +37,6 @@ def compass_callback(degree):
     if current_compass >= lower_tolerance and current_compass <= upper_tolerance:
         published_data.data = True
 
-    pwm_just_forward_publisher.publish(published_data)
-
      # if on AutoControl mode, publish the data
      if auto_control.state == AutoControl.AVOID_RED_AND_GREEN or auto_control.state == AutoControl.AVOID_RED:
          pwm_just_forward_publisher.publish(published_data)
