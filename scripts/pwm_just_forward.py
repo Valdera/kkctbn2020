@@ -14,10 +14,10 @@ upper_tolerance = None
 
 def auto_control_callback(msg):
     global current_auto_control
-    current_auto_control = msg.state
+    current_auto_control = msg
 
 def compass_callback(degree):
-    global  init_compass, current_compass, degree_decision, upper_tolerance, lower_tolerance
+    global  init_compass, current_compass, degree_decision, upper_tolerance, lower_tolerance, current_auto_control
     published_data = Bool()
     published_data.data = False
 
@@ -36,15 +36,16 @@ def compass_callback(degree):
     # If between the tolerance degree just push forward
     if current_compass >= lower_tolerance and current_compass <= upper_tolerance:
         published_data.data = True
-
-     # if on AutoControl mode, publish the data
-     if auto_control.state == AutoControl.AVOID_RED_AND_GREEN or auto_control.state == AutoControl.AVOID_RED:
-         pwm_just_forward_publisher.publish(published_data)
-     # If on manual mode, reset everything
-     elif auto_control.state == AutoControl.MANUAL:
-         init_compass = None
-         published_data.data = False
-         pwm_just_forward_publisher.publish(published_data)
+    
+    if(current_auto_control):
+        # if on AutoControl mode, publish the data
+        if (current_auto_control.state == AutoControl.AVOID_RED_AND_GREEN) or (current_auto_control.state == AutoControl.AVOID_RED):
+            pwm_just_forward_publisher.publish(published_data)
+        # If on manual mode, reset everything
+        else:
+            init_compass = None
+            published_data.data = False
+            pwm_just_forward_publisher.publish(published_data)
 
 if __name__ == '__main__':
     rospy.init_node("pwm_just_forward")
