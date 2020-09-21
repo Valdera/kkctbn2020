@@ -10,6 +10,7 @@
     <node pkg="kkctbn2020" name="mode" type="mode.py" output="screen"/>
     <node pkg="kkctbn2020" name="pwm_override" type="pwm_override.py" output="screen"/>
     <node pkg="kkctbn2020" name="motor_controller" type="motor_controller.py" output="screen"/>
+    <node pkg="kkctbn2020" name="pwm_just_forward" type="pwm_just_forward.py" output="screen"/>
     
     <node respawn="true" pkg="joy" type="joy_node" name="turtle_joy" >
       <param name="dev" type="string" value="/dev/input/js0" />
