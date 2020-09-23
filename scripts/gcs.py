@@ -14,8 +14,8 @@ ori = numpy.zeros([480, 640, 3], dtype = numpy.uint8)
 red_mask = numpy.zeros([480, 640, 3], dtype = numpy.uint8)
 green_mask = numpy.zeros([480, 640, 3], dtype = numpy.uint8)
 throttle_pwm = 0
-auto_ctrl = "NONE"
-mode = "NONE"
+auto_ctrl = "None"
+mode = "None"
 detect = ""
 
 frame, threshold, image_hsv = None, None, None
@@ -72,18 +72,18 @@ def throttle_pwm_callback(pwm):
 def mode_callback(mode_in):
     global mode
     if mode_in.value == Mode.ARMED:
-        mode = "ARMED"
+        mode = "Armed"
     elif mode_in.value == Mode.HOLD:
-        mode = "HOLD"
+        mode = "Hold"
 
 def auto_control_callback(msg):
     global auto_ctrl
     if msg.state == AutoControl.AVOID_RED:
-        auto_ctrl = "AVOID RED"
+        auto_ctrl = "Red"
     elif msg.state == AutoControl.AVOID_RED_AND_GREEN:
-        auto_ctrl = "AVOID RED AND GREEN"
+        auto_ctrl = "Red and Green"
     else:
-        auto_ctrl = "AVOID WHAT"
+        auto_ctrl = "None"
 
 if __name__ == '__main__':
     # Initialize gcs node
@@ -108,21 +108,24 @@ if __name__ == '__main__':
 
     master.geometry(str(master_width) + "x" + str(master_height))
 
-    # Info
-    # info_frame = Tkinter.Frame(master=master)
-
     motor_info_frame = Tkinter.Frame(master=master)
 
-    pwm_label = Tkinter.Label(motor_info_frame, text="PWM Throttle: " + str(throttle_pwm), fg='black', font=("Helvetica", 12))
-    pwm_label.pack()
+    pwm_label_title = Tkinter.Label(motor_info_frame, text="PWM:", fg='black', font=("Helvetica", 12))
+    pwm_label_title.grid(row=1, column=1, sticky="e")
+    pwm_label_value = Tkinter.Label(motor_info_frame, text=str(throttle_pwm), fg='black', font=("Helvetica", 12, 'bold'))
+    pwm_label_value.grid(row=1, column=2, sticky="w")
 
-    mode_label = Tkinter.Label(motor_info_frame, text="Mode: " + mode, fg='black', font=("Helvetica", 12))
-    mode_label.pack()
+    mode_label_title = Tkinter.Label(motor_info_frame, text="Mode:", fg='black', font=("Helvetica", 12))
+    mode_label_title.grid(row=2, column=1, sticky="e")
+    mode_label_value = Tkinter.Label(motor_info_frame, text=mode, fg='black', font=("Helvetica", 12, 'bold'))
+    mode_label_value.grid(row=2, column=2, sticky="w")
 
-    auto_label = Tkinter.Label(motor_info_frame, text="Auto: " + auto_ctrl, fg='black', font=("Helvetica", 12))
-    auto_label.pack()
+    auto_label_title = Tkinter.Label(motor_info_frame, text="Avoid:", fg='black', font=("Helvetica", 12))
+    auto_label_title.grid(row=3, column=1, sticky="e")
+    auto_label_value = Tkinter.Label(motor_info_frame, text=auto_ctrl, fg='black', font=("Helvetica", 12, 'bold'))
+    auto_label_value.grid(row=3, column=2, sticky="w")
 
-    motor_info_frame.grid(row=1, column=1, pady=(0, 10))
+    motor_info_frame.grid(row=1, column=1, pady=(0, 5))
 
     # Set up slider
     slider_frame = Tkinter.Frame(master=master)
@@ -141,7 +144,6 @@ if __name__ == '__main__':
     red_high_sat = 255   # add_slider('RED H-SAT', 0, 255, 1, slider_frame, 255)
     red_high_val = 255   # add_slider('RED H-VAL', 0, 255, 1, slider_frame, 255)
 
-    # slider_frame2 = Tkinter.Frame(master=master)
     green_low_hue = 69   # add_slider('GREEN L-HUE', 0, 255, 1, slider_frame2, 69)
     green_low_sat = 43   # add_slider('GREEN L-SAT', 0, 255, 1, slider_frame2, 43)
     green_low_val = 0    # add_slider('GREEN L-VAL', 0, 255, 1, slider_frame2, 0)
@@ -149,32 +151,41 @@ if __name__ == '__main__':
     green_high_sat = 255 # add_slider('GREEN H-SAT', 0, 255, 1, slider_frame2, 255)
     green_high_val = 255 # add_slider('GREEN H-VAL', 0, 255, 1, slider_frame2, 255)
 
+    slider_frame.grid(row=1, column=3, pady=(0, 5))
+
     # Output Mask value
     mask_info_frame = Tkinter.Frame(master=master)
-    red_hue_label = Tkinter.Label(mask_info_frame, text="Red Hue: " + str(red_low_hue) + ", " + str(red_high_hue), fg='red', font=("Helvetica", 12))
-    red_hue_label.pack()
+    red_hue_label_title = Tkinter.Label(mask_info_frame, text="Red Hue:", fg='black', font=("Helvetica", 12))
+    red_hue_label_title.grid(row=1, column=1, sticky="e")
+    red_hue_label_value = Tkinter.Label(mask_info_frame, text=str(red_low_hue) + ", " + str(red_high_hue), fg='red', font=("Helvetica", 12))
+    red_hue_label_value.grid(row=1, column=2, sticky="w")
 
-    red_sat_label = Tkinter.Label(mask_info_frame, text="Red Sat: " + str(red_low_sat) + ", " + str(red_high_sat), fg='red', font=("Helvetica", 12))
-    red_sat_label.pack()
+    red_sat_label_title = Tkinter.Label(mask_info_frame, text="Red Sat:", fg='black', font=("Helvetica", 12))
+    red_sat_label_title.grid(row=2, column=1, sticky="e")
+    red_sat_label_value = Tkinter.Label(mask_info_frame, text=str(red_low_sat) + ", " + str(red_high_sat), fg='red', font=("Helvetica", 12))
+    red_sat_label_value.grid(row=2, column=2, sticky="w")
 
-    red_val_label = Tkinter.Label(mask_info_frame, text="Red Val: " + str(red_low_val) + ", " + str(red_high_val), fg='red', font=("Helvetica", 12))
-    red_val_label.pack()
+    red_val_label_title = Tkinter.Label(mask_info_frame, text="Red Val:", fg='black', font=("Helvetica", 12))
+    red_val_label_title.grid(row=3, column=1, sticky="e")
+    red_val_label_value = Tkinter.Label(mask_info_frame, text=str(red_low_val) + ", " + str(red_high_val), fg='red', font=("Helvetica", 12))
+    red_val_label_value.grid(row=3, column=2, sticky="w")
 
-    green_hue_label = Tkinter.Label(mask_info_frame, text="Green Hue: " + str(green_low_hue) + ", " + str(green_high_hue), fg='green', font=("Helvetica", 12))
-    green_hue_label.pack()
+    green_hue_label_title = Tkinter.Label(mask_info_frame, text="Green Hue:", fg='black', font=("Helvetica", 12))
+    green_hue_label_title.grid(row=5, column=1, sticky="e")
+    green_hue_label_value = Tkinter.Label(mask_info_frame, text=str(green_low_hue) + ", " + str(green_high_hue), fg='green', font=("Helvetica, 12"))
+    green_hue_label_value.grid(row=5, column=2, sticky="w")
 
-    green_sat_label = Tkinter.Label(mask_info_frame, text="Green Sat: " + str(green_low_sat) + ", " + str(green_high_sat), fg='green', font=("Helvetica", 12))
-    green_sat_label.pack()
+    green_sat_label_title = Tkinter.Label(mask_info_frame, text="Green Sat:", fg='black', font=("Helvetica", 12))
+    green_sat_label_title.grid(row=6, column=1, sticky="e")
+    green_sat_label_value = Tkinter.Label(mask_info_frame, text=str(green_low_sat) + ", " + str(green_high_sat), fg='green', font=("Helvetica", 12))
+    green_sat_label_value.grid(row=6, column=2, sticky="w")
 
-    green_val_label = Tkinter.Label(mask_info_frame, text="Green Val: " + str(green_low_val) + ", " + str(green_high_val), fg='green', font=("Helvetica", 12))
-    green_val_label.pack()
+    green_val_label_title = Tkinter.Label(mask_info_frame, text="Green Val:", fg='black', font=("Helvetica", 12))
+    green_val_label_title.grid(row=7, column=1, sticky="e")
+    green_val_label_value = Tkinter.Label(mask_info_frame, text=str(green_low_val) + ", " + str(green_high_val), fg='green', font=("Helvetica", 12))
+    green_val_label_value.grid(row=7, column=2, sticky="w")
 
-    mask_info_frame.grid(row=1, column=2)
-
-    # info_frame.grid(row=1, column=1, pady=(0, 10))
-
-    slider_frame.grid(row=1, column=3)
-    # slider_frame2.grid(row=1, column=3)
+    mask_info_frame.grid(row=1, column=2, pady=(0, 5))
 
     # ori_label = Tkinter.Label(master=master, image=None)
     # ori_label.grid(row=2, column=1)
@@ -184,6 +195,23 @@ if __name__ == '__main__':
 
     green_mask_label = Tkinter.Label(master=master, image=None)
     green_mask_label.grid(row=2, column=3)
+
+    master.update()
+
+    # Adjust Image
+    master_height = master.winfo_height()
+    master_width = master.winfo_width()
+
+    photo_height = int(round(master_height - slider_frame.winfo_height()))
+    photo_width = int(round(((master_width - slider_frame.winfo_width()) / 2)))
+
+    # Check if 2 images' width are larger than the window's width
+    if (int(round(photo_height * 642 / 482) * 2) > master_width):
+        # Calculate image size based on the window's width
+        photo_height = int(round(photo_width * 482 / 642))
+    else:
+        # Calculate image size based on the window's height
+        photo_width = int(round(photo_height * 642 / 482))
 
     cv.namedWindow("Camera Output")
     cv.setMouseCallback("Camera Output", selectROI)
@@ -202,20 +230,18 @@ if __name__ == '__main__':
             b, g, r = cv.split(red_mask)
             red_img_array = cv.merge((r, g, b))
             red_img = Image.fromarray(red_img_array)
-            red_img_tk = ImageTk.PhotoImage(image=red_img)
+            red_img_resize = red_img.resize((photo_width, photo_height), Image.ANTIALIAS)
+            red_img_tk = ImageTk.PhotoImage(image=red_img_resize)
             red_mask_label.config(image=red_img_tk)
 
         if green_mask is not None:
             b, g, r = cv.split(green_mask)
             green_img_array = cv.merge((r, g, b))
             green_img = Image.fromarray(green_img_array)
-            green_img_tk = ImageTk.PhotoImage(image=green_img)
+            green_img_resize = green_img.resize((photo_width, photo_height), Image.ANTIALIAS)
+            green_img_tk = ImageTk.PhotoImage(image=green_img_resize)
             green_mask_label.config(image=green_img_tk)
 
-        pwm_label.config(text="PWM Throttle: " + str(throttle_pwm))
-        mode_label.config(text="Mode: " + mode)
-        auto_label.config(text="Auto: " + auto_ctrl)
-        
         if mouseX is not None:
             hue = numpy.mean(roi[:,:, 0])
             sat = numpy.mean(roi[:,:, 1])
@@ -243,15 +269,18 @@ if __name__ == '__main__':
                 green_high_sat = sat_high
                 green_high_val = val_high
                 detect = ""
-                
 
-        red_hue_label.config(text="Red Hue: " + str(red_low_hue) + ", " + str(red_high_hue))
-        red_sat_label.config(text="Red Sat: " + str(red_low_sat) + ", " + str(red_high_sat))
-        red_val_label.config(text="Red Val: " + str(red_low_val) + ", " + str(red_high_val))
+        pwm_label_value.config(text=str(throttle_pwm))
+        mode_label_value.config(text=mode)
+        auto_label_value.config(text=auto_ctrl)                
 
-        green_hue_label.config(text="Green Hue: " + str(green_low_hue) + ", " + str(green_high_hue))
-        green_sat_label.config(text="Green Sat: " + str(green_low_sat) + ", " + str(green_high_sat))
-        green_val_label.config(text="Green Val: " + str(green_low_val) + ", " + str(green_high_val))
+        red_hue_label_value.config(text=str(round(red_low_hue, 2)) + ", " + str(round(red_high_hue, 2)))
+        red_sat_label_value.config(text=str(round(red_low_sat, 2)) + ", " + str(round(red_high_sat, 2)))
+        red_val_label_value.config(text=str(round(red_low_val, 2)) + ", " + str(round(red_high_val, 2)))
+
+        green_hue_label_value.config(text=str(round(green_low_hue, 2)) + ", " + str(round(green_high_hue, 2)))
+        green_sat_label_value.config(text=str(round(green_low_sat, 2)) + ", " + str(round(green_high_sat, 2)))
+        green_val_label_value.config(text=str(round(green_low_val, 2)) + ", " + str(round(green_high_val, 2)))
 
         master.update()
 
