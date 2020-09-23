@@ -65,39 +65,69 @@ def objectCountCallback(msg):
         rcin = OverrideRCIn()
         motor1 = 0
         motor2 = 1
+        servo1 = 2
+        servo2 = 3
         
         if (autoControl.state == AutoControl.AVOID_RED_AND_GREEN):
             if (msg.red > 0):
                 for i in range(8):
                     rcin.channels[i] = 0
+
                 if (just_forward):
-                    rcin.channels[motor1] = 1900
+                    rcin.channels[motor1] = 1650
+                    rcin.channels[motor2] = 1650
+                    rcin.channels[servo1] = 1500
+                    rcin.channels[servo2] = 1500
                 else:
                     rcin.channels[motor1] = currentThrottlePwm
-                rcin.channels[motor2] = 1500 + control_effort
-                if (rcin.channels[motor2] > 2200):
-                    rcin.channels[motor1] = 2200
-                elif (rcin.channels[motor1] < 800):
-                    rcin.channels[motor1] = 800
+                    rcin.channels[motor2] = currentThrottlePwm
+                    rcin.channels[servo1] = 1500 + control_effort
+                    rcin.channels[servo2] = 1500 + control_effort
+                    
+                    if (rcin.channels[servo1] > 2200):
+                        rcin.channels[servo1] = 2200
+                        rcin.channels[servo2] = 2200
+                    elif (rcin.channels[servo1] < 800):
+                        rcin.channels[servo2] = 800
+                        rcin.channels[servo1] = 800
             else:
                 if (just_forward):
-                    rcin.channels[motor1] = 1900
+                    rcin.channels[motor1] = 1650
+                    rcin.channels[motor2] = 1650
+                    rcin.channels[servo1] = 1500
+                    rcin.channels[servo2] = 1500
                 else:
                     rcin.channels[motor1] = currentThrottlePwm
-                rcin.channels[motor2] = 1650
+                    rcin.channels[motor2] = 1650
+
         else:
             if (msg.red > 0):
                 for i in range(8):
                     rcin.channels[i] = 0
+
                 rcin.channels[motor1] = currentThrottlePwm
-                rcin.channels[motor2] = 1500 + control_effort
-                if (rcin.channels[motor2] > 2200):
-                    rcin.channels[motor2] = 2200
-                elif (rcin.channels[motor2] < 800):
-                    rcin.channels[motor2] = 800
+                rcin.channels[motor2] = currentThrottlePwm
+                rcin.channels[servo1] = 1500 + control_effort
+                rcin.channels[servo2] = 1500 + control_effort
+
+                if (just_forward):
+                    rcin.channels[motor1] = 1900
+                    rcin.channels[motor2] = 1900
+                    rcin.channels[servo1] = 1650
+                    rcin.channels[servo2] = 1650
+                    
+                else:
+                    if (rcin.channels[servo1] > 2200):
+                        rcin.channels[servo1] = 2200
+                        rcin.channels[servo2] = 2200
+                    elif (rcin.channels[servo1] < 800):
+                        rcin.channels[servo2] = 800
+                        rcin.channels[servo1] = 800
             else:
                 rcin.channels[motor1] = currentThrottlePwm
-                rcin.channels[motor2] = 1650
+                rcin.channels[motor2] = currentThrottlePwm
+                rcin.channels[servo1] = 1650
+                rcin.channels[servo2] = 1650
         
         override_publisher.publish(rcin)
         
