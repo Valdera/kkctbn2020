@@ -11,7 +11,7 @@ mode = Mode()
 autoControl = AutoControl()
 autoControlBefore = AutoControl()
 control_effort = float()
-currentThrottlePwm = 1700
+currentThrottlePwm = 1400
 just_forward = False
 
 def just_forward_callback(msg):

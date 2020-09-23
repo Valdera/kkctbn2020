@@ -109,34 +109,37 @@ if __name__ == '__main__':
     master.geometry(str(master_width) + "x" + str(master_height))
 
     # Info
-    info_frame = Tkinter.Frame(master=master)
-    pwm_label = Tkinter.Label(info_frame, text="PWM Throttle: " + str(throttle_pwm), fg='black', font=("Helvetica", 12))
+    # info_frame = Tkinter.Frame(master=master)
+
+    motor_info_frame = Tkinter.Frame(master=master)
+
+    pwm_label = Tkinter.Label(motor_info_frame, text="PWM Throttle: " + str(throttle_pwm), fg='black', font=("Helvetica", 12))
     pwm_label.pack()
 
-    mode_label = Tkinter.Label(info_frame, text="Mode: " + mode, fg='black', font=("Helvetica", 12))
+    mode_label = Tkinter.Label(motor_info_frame, text="Mode: " + mode, fg='black', font=("Helvetica", 12))
     mode_label.pack()
 
-    auto_label = Tkinter.Label(info_frame, text="Auto: " + auto_ctrl, fg='black', font=("Helvetica", 12))
+    auto_label = Tkinter.Label(motor_info_frame, text="Auto: " + auto_ctrl, fg='black', font=("Helvetica", 12))
     auto_label.pack()
 
-    info_frame.grid(row=1, column=1, pady=(0, 10))
+    motor_info_frame.grid(row=1, column=1, pady=(0, 10))
 
     # Set up slider
-    slider_frame1 = Tkinter.Frame(master=master)
+    slider_frame = Tkinter.Frame(master=master)
 
-    contrast = add_slider('Contrast', -255, 255, 1, slider_frame1, 1, 0)
-    brightness = add_slider('Brightness', -127, 127, 1, slider_frame1, 2, -2)
-    gamma = add_slider('Gamma', 0.1, 3, 0.1, slider_frame1, 3, 1)
-    roi_y = add_slider('ROI Y', 0, 480, 1, slider_frame1, 4, 5)
-    adjust = add_slider('Adjust', 0, 200, 1, slider_frame1, 5, 50)
+    contrast = add_slider('Contrast', -255, 255, 1, slider_frame, 1, 0)
+    brightness = add_slider('Brightness', -127, 127, 1, slider_frame, 2, -2)
+    gamma = add_slider('Gamma', 0.1, 3, 0.1, slider_frame, 3, 1)
+    roi_y = add_slider('ROI Y', 0, 480, 1, slider_frame, 4, 5)
+    adjust = add_slider('Adjust', 0, 200, 1, slider_frame, 5, 50)
 
     # Set Default Value
-    red_low_hue = 118    # add_slider('RED L-HUE', 0, 255, 1, slider_frame1, 118)
-    red_low_sat = 77     # add_slider('RED L-SAT', 0, 255, 1, slider_frame1, 77)
-    red_low_val = 0      # add_slider('RED L-VAL', 0, 255, 1, slider_frame1, 0)
-    red_high_hue = 186   # add_slider('RED H-HUE', 0, 255, 1, slider_frame1, 186)
-    red_high_sat = 255   # add_slider('RED H-SAT', 0, 255, 1, slider_frame1, 255)
-    red_high_val = 255   # add_slider('RED H-VAL', 0, 255, 1, slider_frame1, 255)
+    red_low_hue = 118    # add_slider('RED L-HUE', 0, 255, 1, slider_frame, 118)
+    red_low_sat = 77     # add_slider('RED L-SAT', 0, 255, 1, slider_frame, 77)
+    red_low_val = 0      # add_slider('RED L-VAL', 0, 255, 1, slider_frame, 0)
+    red_high_hue = 186   # add_slider('RED H-HUE', 0, 255, 1, slider_frame, 186)
+    red_high_sat = 255   # add_slider('RED H-SAT', 0, 255, 1, slider_frame, 255)
+    red_high_val = 255   # add_slider('RED H-VAL', 0, 255, 1, slider_frame, 255)
 
     # slider_frame2 = Tkinter.Frame(master=master)
     green_low_hue = 69   # add_slider('GREEN L-HUE', 0, 255, 1, slider_frame2, 69)
@@ -146,17 +149,41 @@ if __name__ == '__main__':
     green_high_sat = 255 # add_slider('GREEN H-SAT', 0, 255, 1, slider_frame2, 255)
     green_high_val = 255 # add_slider('GREEN H-VAL', 0, 255, 1, slider_frame2, 255)
 
-    slider_frame1.grid(row=1, column=2)
+    # Output Mask value
+    mask_info_frame = Tkinter.Frame(master=master)
+    red_hue_label = Tkinter.Label(mask_info_frame, text="Red Hue: " + str(red_low_hue) + ", " + str(red_high_hue), fg='red', font=("Helvetica", 12))
+    red_hue_label.pack()
+
+    red_sat_label = Tkinter.Label(mask_info_frame, text="Red Sat: " + str(red_low_sat) + ", " + str(red_high_sat), fg='red', font=("Helvetica", 12))
+    red_sat_label.pack()
+
+    red_val_label = Tkinter.Label(mask_info_frame, text="Red Val: " + str(red_low_val) + ", " + str(red_high_val), fg='red', font=("Helvetica", 12))
+    red_val_label.pack()
+
+    green_hue_label = Tkinter.Label(mask_info_frame, text="Green Hue: " + str(green_low_hue) + ", " + str(green_high_hue), fg='green', font=("Helvetica", 12))
+    green_hue_label.pack()
+
+    green_sat_label = Tkinter.Label(mask_info_frame, text="Green Sat: " + str(green_low_sat) + ", " + str(green_high_sat), fg='green', font=("Helvetica", 12))
+    green_sat_label.pack()
+
+    green_val_label = Tkinter.Label(mask_info_frame, text="Green Val: " + str(green_low_val) + ", " + str(green_high_val), fg='green', font=("Helvetica", 12))
+    green_val_label.pack()
+
+    mask_info_frame.grid(row=1, column=2)
+
+    # info_frame.grid(row=1, column=1, pady=(0, 10))
+
+    slider_frame.grid(row=1, column=3)
     # slider_frame2.grid(row=1, column=3)
 
     # ori_label = Tkinter.Label(master=master, image=None)
     # ori_label.grid(row=2, column=1)
 
     red_mask_label = Tkinter.Label(master=master, image=None)
-    red_mask_label.grid(row=2, column=1)
+    red_mask_label.grid(row=2, column=1, columnspan=2)
 
     green_mask_label = Tkinter.Label(master=master, image=None)
-    green_mask_label.grid(row=2, column=2)
+    green_mask_label.grid(row=2, column=3)
 
     cv.namedWindow("Camera Output")
     cv.setMouseCallback("Camera Output", selectROI)
@@ -188,8 +215,7 @@ if __name__ == '__main__':
         pwm_label.config(text="PWM Throttle: " + str(throttle_pwm))
         mode_label.config(text="Mode: " + mode)
         auto_label.config(text="Auto: " + auto_ctrl)
-        master.update()
-
+        
         if mouseX is not None:
             hue = numpy.mean(roi[:,:, 0])
             sat = numpy.mean(roi[:,:, 1])
@@ -218,6 +244,17 @@ if __name__ == '__main__':
                 green_high_val = val_high
                 detect = ""
                 
+
+        red_hue_label.config(text="Red Hue: " + str(red_low_hue) + ", " + str(red_high_hue))
+        red_sat_label.config(text="Red Sat: " + str(red_low_sat) + ", " + str(red_high_sat))
+        red_val_label.config(text="Red Val: " + str(red_low_val) + ", " + str(red_high_val))
+
+        green_hue_label.config(text="Green Hue: " + str(green_low_hue) + ", " + str(green_high_hue))
+        green_sat_label.config(text="Green Sat: " + str(green_low_sat) + ", " + str(green_high_sat))
+        green_val_label.config(text="Green Val: " + str(green_low_val) + ", " + str(green_high_val))
+
+        master.update()
+
         cv.waitKey(30)
         cfg = Config()
         
