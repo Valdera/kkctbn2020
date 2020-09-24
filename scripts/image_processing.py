@@ -115,7 +115,7 @@ if __name__ == '__main__':
 
         # Set Range of Interest (ROI)
         roi_y = cfg.roi_y
-        cv.line(frame, (width, roi_y), (0, roi_y), (0, 255, 0), 2)
+        cv.line(frame, (width, roi_y), (0, roi_y), (255, 255, 0), 2)
 
         # Set up Red HSV
         red_low_hue = cfg.red_low_hue
