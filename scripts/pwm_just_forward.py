@@ -27,8 +27,8 @@ def compass_callback(degree):
     if init_compass is None:
         init_compass = degree.data
         # Set the tolerance degree to push forward (88 - 92)
-        upper_tolerance = init_compass + degree_decision + 2.0
-        lower_tolerance = init_compass + degree_decision - 2.0 
+        upper_tolerance = init_compass + degree_decision + 5.0
+        lower_tolerance = init_compass + degree_decision - 5.0 
         if upper_tolerance > 360.0:
             upper_tolerance -= 360
             lower_tolerance -= 360
