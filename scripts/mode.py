@@ -24,7 +24,11 @@ def pwm_mode_callback(msg):
     
 if __name__ == '__main__':
     rospy.init_node("mode")
-    rc_subscriber = rospy.Subscriber("/mavros/rc/in", RCIn, pwm_mode_callback)
+
+    # Publisher
     mode_publisher = rospy.Publisher("/makarax/mode", Mode, queue_size=8)
+
+    # Subscriber
+    rc_subscriber = rospy.Subscriber("/mavros/rc/in", RCIn, pwm_mode_callback)
 
     rospy.spin()

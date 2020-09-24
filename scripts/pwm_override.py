@@ -47,8 +47,8 @@ if __name__ == '__main__':
     
     client = dynamic_reconfigure.client.Client("server", config_callback=callback)
     
+    # Publisher
     pwm_override_publisher = rospy.Publisher("/makarax/pwm_override", Bool, queue_size=8)
-    
     auto_control_publisher = rospy.Subscriber("/makarax/auto_control", AutoControl, auto_control_callback)
     
     rospy.spin()

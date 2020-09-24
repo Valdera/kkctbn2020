@@ -153,11 +153,18 @@ def objectCountCallback(msg):
 
 if __name__ == '__main__':
     rospy.init_node("motor_controller")
+    
+    # Publisher
     override_publisher = rospy.Publisher("/mavros/rc/override", OverrideRCIn, queue_size=8)
+
+    # Subscriber
+    # pwm_subscriber = rospy.Subscriber("/makarax/pwm_throttle", UInt16, pwmCallback)
     mode_subscriber = rospy.Subscriber("/makarax/mode", Mode, modeCallback)
+    # pwm_override_subscriber = rospy.Subscriber("/makarax/pwm_override", Bool, pwmOverrideCallback)
     just_forward_subscriber = rospy.Subscriber("/makarax/pwm_just_forward", Bool, just_forward_callback)
     control_effort_subscriber = rospy.Subscriber("control_effort", Float64, controlEffortCallback)
     red_count_subscriber = rospy.Subscriber("/makarax/object/count", ObjectCount, objectCountCallback)
+    # joy_subscriber = rospy.Subscriber("joy", Joy, joyCallback)
     auto_control_subscriber = rospy.Subscriber("/makarax/auto_control", AutoControl, autoControlCallback)
 
     # pwm_subscriber = rospy.Subscriber("/makarax/pwm_throttle", UInt16, pwmCallback)    

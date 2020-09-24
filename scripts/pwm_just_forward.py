@@ -54,7 +54,11 @@ def compass_callback(degree):
 
 if __name__ == '__main__':
     rospy.init_node("pwm_just_forward")
+
+    # Publisher
     pwm_just_forward_publisher = rospy.Publisher("/makarax/pwm_just_forward", Bool, queue_size=8)
+
+    # Subscriber
     auto_control_subscriber = rospy.Subscriber("/makarax/auto_control", AutoControl, auto_control_callback)
     mode_subscriber = rospy.Subscriber("/makarax/mode", Mode, mode_callback)
     compass_subscriber = rospy.Subscriber("/mavros/global_position/compass_hdg", Float64, compass_callback)
