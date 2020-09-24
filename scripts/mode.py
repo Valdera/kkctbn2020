@@ -20,9 +20,7 @@ def pwm_mode_callback(msg):
         mode.value = Mode.HOLD
     elif (pwm > 1600):
         mode.value = Mode.ARMED
-    
-    if (pwm < 1400 or pwm > 1600):
-        mode_publisher.publish(mode)
+    mode_publisher.publish(mode)
     
 if __name__ == '__main__':
     rospy.init_node("mode")

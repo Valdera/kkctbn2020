@@ -13,13 +13,11 @@ def rcin_callback(msg):
     control = AutoControl()
     # Configure the correct control based on the current pwm
     if current_pwm < 1400:
-        # Back to the manual state
         control.state = AutoControl.MANUAL
     elif current_pwm > 1600:
         # Avoid Red And Green
         control.state = AutoControl.AVOID_RED_AND_GREEN
     else:
-        # If pwm not in range 1400-1600 only avoid red 
         control.state = AutoControl.AVOID_RED
 
     # Publish the corresponding control

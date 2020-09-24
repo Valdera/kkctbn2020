@@ -64,10 +64,9 @@ def autoControlCallback(msg):
 # Motor Controller
 def objectCountCallback(msg):
     global autoControl, mode, control_effort, pwm_full
+    rcin = OverrideRCIn()
     throttle_pwm = UInt16()
-    
     if (autoControl.state != AutoControl.MANUAL and mode.value == Mode.ARMED):
-        rcin = OverrideRCIn()
         # Channels
         motor1 = 0
         motor2 = 1
@@ -80,10 +79,10 @@ def objectCountCallback(msg):
                 rcin.channels[i] = 0
             # If Just_forward set the pwm to full speed and servo forward
             if (just_forward):
-                    rcin.channels[motor1] = pwm_full
-                    rcin.channels[motor2] = pwm_full
-                    rcin.channels[servo1] = 1500
-                    rcin.channels[servo2] = 1500
+                rcin.channels[motor1] = pwm_full
+                rcin.channels[motor2] = pwm_full
+                rcin.channels[servo1] = 1500
+                rcin.channels[servo2] = 1500
             # Else use the image processing
             else:
                 # If red buoy detected
@@ -147,7 +146,7 @@ def objectCountCallback(msg):
                     rcin.channels[motor2] = currentThrottlePwm
                     rcin.channels[servo1] = 1650
                     rcin.channels[servo2] = 1650
-                    
+            
         # Publish the pwm
         override_publisher.publish(rcin)
         
