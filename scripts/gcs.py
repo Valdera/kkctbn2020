@@ -146,7 +146,7 @@ if __name__ == '__main__':
     auto_label_value = Tkinter.Label(motor_info_frame, text=auto_ctrl, fg='black', font=("Helvetica", 12, 'bold'))
     auto_label_value.grid(row=3, column=2, sticky="w")
 
-    motor_info_frame.grid(row=1, column=1, pady=(0, 5))
+    motor_info_frame.grid(row=1, column=2, pady=(0, 5))
 
     # Set up slider
     slider_frame = Tkinter.Frame(master=master)
@@ -172,7 +172,7 @@ if __name__ == '__main__':
     green_high_sat = 255 # add_slider('GREEN H-SAT', 0, 255, 1, slider_frame2, 255)
     green_high_val = 255 # add_slider('GREEN H-VAL', 0, 255, 1, slider_frame2, 255)
 
-    slider_frame.grid(row=1, column=3, pady=(0, 5))
+    slider_frame.grid(row=1, column=4, pady=(0, 5))
 
     # Output Mask value
     mask_info_frame = Tkinter.Frame(master=master)
@@ -206,14 +206,14 @@ if __name__ == '__main__':
     green_val_label_value = Tkinter.Label(mask_info_frame, text=str(green_low_val) + ", " + str(green_high_val), fg='green', font=("Helvetica", 12))
     green_val_label_value.grid(row=7, column=2, sticky="w")
 
-    mask_info_frame.grid(row=1, column=2, pady=(0, 5))
+    mask_info_frame.grid(row=1, column=3, pady=(0, 5))
 
     ori_label = Tkinter.Label(master=master, image=None)
     ori_label.bind("<Button>", mouse_click)
-    ori_label.grid(row=2, column=1, columnspan=2)
+    ori_label.grid(row=2, column=1)
 
     red_mask_label = Tkinter.Label(master=master, image=None)
-    red_mask_label.grid(row=2, column=3)
+    red_mask_label.grid(row=2, column=2, columnspan=2)
 
     green_mask_label = Tkinter.Label(master=master, image=None)
     green_mask_label.grid(row=2, column=4)
@@ -234,7 +234,7 @@ if __name__ == '__main__':
     amv_image_tkinter = ImageTk.PhotoImage(image=amv_image_resize)
 
     amv_label = Tkinter.Label(master=master, image=amv_image_tkinter)
-    amv_label.grid(row=1, column=4)
+    amv_label.grid(row=1, column=1, pady=(0, 5))
 
     # Check if images' height are larger than the window's available height
     if (int(round(photo_width * 482 / 642) * 3) > photo_height):
