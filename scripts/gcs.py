@@ -246,8 +246,7 @@ if __name__ == '__main__':
             b, g, r = cv.split(ori_resize)
             ori_img_array = cv.merge((r, g, b))
             ori_img = Image.fromarray(ori_img_array)
-            ori_img_resize = ori_img.resize((photo_width, photo_height), Image.ANTIALIAS)
-            ori_img_tk = ImageTk.PhotoImage(image=ori_img_resize)
+            ori_img_tk = ImageTk.PhotoImage(image=ori_img)
             ori_label.config(image=ori_img_tk)
 
         if red_mask is not None:
