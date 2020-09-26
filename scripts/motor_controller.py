@@ -6,12 +6,11 @@ from mavros_msgs.msg import OverrideRCIn
 from std_msgs.msg import Float64, UInt16, Int16, Bool
 from sensor_msgs.msg import Joy
 
-
 mode = Mode()
 autoControl = AutoControl()
 autoControlBefore = AutoControl()
 control_effort = float()
-currentThrottlePwm = 1400
+currentThrottlePwm = 1600
 pwm_full = 1300
 just_forward = False
 
@@ -38,6 +37,9 @@ def pwmInputCallback(msg):
 
     if (currentThrottlePwm < 1600):
         currentThrottlePwm = 1600
+
+    # Publish the value
+    pwm_publisher.publish(currentThrottlePwm)
     
 # Control Effort 
 def controlEffortCallback(msg):
@@ -87,7 +89,6 @@ def objectCountCallback(msg):
             else:
                 # If red buoy detected
                 if (msg.red > 0):
-        
                     rcin.channels[motor1] = currentThrottlePwm
                     rcin.channels[motor2] = currentThrottlePwm
                     rcin.channels[servo1] = 1500 + control_effort
@@ -156,7 +157,7 @@ if __name__ == '__main__':
     
     # Publisher
     override_publisher = rospy.Publisher("/mavros/rc/override", OverrideRCIn, queue_size=8)
-    pwm_publisher = rospy.Publisher("/makarax/pwm_throttle",Uint16, queue_size=8)
+    pwm_publisher = rospy.Publisher("/makarax/pwm_throttle", UInt16, queue_size=8)
 
     # Subscriber
     mode_subscriber = rospy.Subscriber("/makarax/mode", Mode, modeCallback)
@@ -169,7 +170,5 @@ if __name__ == '__main__':
     # pwm_subscriber = rospy.Subscriber("/makarax/pwm_throttle", UInt16, pwmCallback)    
     # pwm_override_subscriber = rospy.Subscriber("/makarax/pwm_override", Bool, pwmOverrideCallback)
     # joy_subscriber = rospy.Subscriber("joy", Joy, joyCallback)
-
-    pwm_publisher.publish(currentThrottlePwm)
-
+        
     rospy.spin()
