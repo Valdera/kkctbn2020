@@ -6,7 +6,7 @@ import rospy
 import Tkinter
 from PIL import Image, ImageTk
 from sensor_msgs.msg import CompressedImage
-from std_msgs.msg import UInt16
+from std_msgs.msg import UInt16, Int16
 # Local Import
 from kkctbn2020.msg import AutoControl, Config, ObjectCount, Mode
 
@@ -16,8 +16,9 @@ green_mask = numpy.zeros([480, 640, 3], dtype = numpy.uint8)
 throttle_pwm = 0
 auto_ctrl = "None"
 mode = "None"
-detect = ""
+detect = "None"
 
+pwm_input = 0
 frame, threshold, image_hsv = None, None, None
 inputMode = True
 mouseX, mouseY = None, None
@@ -40,12 +41,20 @@ def selectROI(event, x, y, flags, params):
         # cv.circle(new_img, (x, y), 4, (0, 255, 0), 2)
         mouseX, mouseY = x, y
         roi = image_hsv[mouseY-10:mouseY+10, mouseX-10:mouseX+10]
-        detect = "RED"
+        detect = "Red"
     elif inputMode and event == cv.EVENT_RBUTTONDOWN:
         # cv.circle(new_img, (x, y), 4, (0, 255, 0), 2)
         mouseX, mouseY = x, y
         roi = image_hsv[mouseY-10:mouseY+10, mouseX-10:mouseX+10]
-        detect = "GREEN"
+        detect = "Green"
+
+def key_press(event):
+    global pwm_input
+    key = event.keysym
+    if key == 'Up':
+        pwm_input = 1
+    elif key == 'Down':
+        pwm_input = -1
 
 def image_callback(img):
     global ori
@@ -91,13 +100,14 @@ if __name__ == '__main__':
 
     # Set Publisher nodes
     cfg_publisher = rospy.Publisher("/makarax/config", Config, queue_size=8)
+    pwm_input_publisher = rospy.Publisher("/makarax/pwm_input", Int16, queue_size=8)
 
     # Set Subscriber nodes
     img_subscriber = rospy.Subscriber("/makarax/image/processed/compressed", CompressedImage, image_callback)
     auto_ctrl_subscriber = rospy.Subscriber("/makarax/auto_control", AutoControl, auto_control_callback)
     red_mask_subscriber = rospy.Subscriber("/makarax/image/mask/red/compressed", CompressedImage, red_mask_callback)
     green_mask_subscriber = rospy.Subscriber("/makarax/image/mask/green/compressed", CompressedImage, green_mask_callback)
-    throttle_pwm_subscriber = rospy.Subscriber("/makarax/pwm_throttle", UInt16, throttle_pwm_callback)
+    pwm_subscriber = rospy.Subscriber("/makarax/pwm_throttle", UInt16, throttle_pwm_callback)
     mode_subscriber = rospy.Subscriber("/makarax/mode", Mode, mode_callback)
 
     master = Tkinter.Tk()
@@ -107,6 +117,7 @@ if __name__ == '__main__':
     master_height = master.winfo_screenheight()
 
     master.geometry(str(master_width) + "x" + str(master_height))
+    master.bind("<Key>", key_press)
 
     motor_info_frame = Tkinter.Frame(master=master)
 
@@ -253,26 +264,30 @@ if __name__ == '__main__':
             val_low = val - adjust.get()
             val_high = val + adjust.get()
 
-            if detect == "RED":
+            if detect == "Red":
                 red_low_hue = hue_low
                 red_low_sat = sat_low
                 red_low_val = val_low
                 red_high_hue = hue_high
                 red_high_sat = sat_high
                 red_high_val = val_high
-                detect = ""
-            elif detect == "GREEN":
+                detect = "None"
+            elif detect == "Green":
                 green_low_hue = hue_low
                 green_low_sat = sat_low
                 green_low_val = val_low
                 green_high_hue = hue_high
                 green_high_sat = sat_high
                 green_high_val = val_high
-                detect = ""
+                detect = "None"
 
+        pwm_input_publisher.publish(pwm_input)
+        if (pwm_input is 1) or (pwm_input is -1): 
+            pwm_input = 0
+            
         pwm_label_value.config(text=str(throttle_pwm))
         mode_label_value.config(text=mode)
-        auto_label_value.config(text=auto_ctrl)                
+        auto_label_value.config(text=auto_ctrl)
 
         red_hue_label_value.config(text=str(round(red_low_hue, 2)) + ", " + str(round(red_high_hue, 2)))
         red_sat_label_value.config(text=str(round(red_low_sat, 2)) + ", " + str(round(red_high_sat, 2)))

@@ -3,7 +3,7 @@
 import rospy
 from kkctbn2020.msg import AutoControl, Mode, ObjectCount
 from mavros_msgs.msg import OverrideRCIn
-from std_msgs.msg import Float64, UInt16, Bool
+from std_msgs.msg import Float64, UInt16, Int16, Bool
 from sensor_msgs.msg import Joy
 
 
@@ -24,20 +24,20 @@ def just_forward_callback(msg):
 #      global currentThrottlePwm
 #      currentThrottlePwm = msg.data
     
-# def joyCallback(msg):
-#     global currentThrottlePwm
-    
-#     if (msg.buttons[0] == 1):
-#         currentThrottlePwm += 50
+def pwmInputCallback(msg):
+    global currentThrottlePwm
+  
+    if (msg.data is 1):
+        currentThrottlePwm += 50
         
-#     if (msg.buttons[2] == 1):
-#         currentThrottlePwm -= 50
+    if (msg.data is -1):
+        currentThrottlePwm -= 50
         
-#     if (currentThrottlePwm > 1900):
-#         currentThrottlePwm = 1900
+    if (currentThrottlePwm > 1900):
+        currentThrottlePwm = 1900
 
-#     if (currentThrottlePwm < 1600):
-#         currentThrottlePwm = 1600
+    if (currentThrottlePwm < 1600):
+        currentThrottlePwm = 1600
     
 # Control Effort 
 def controlEffortCallback(msg):
@@ -156,18 +156,20 @@ if __name__ == '__main__':
     
     # Publisher
     override_publisher = rospy.Publisher("/mavros/rc/override", OverrideRCIn, queue_size=8)
+    pwm_publisher = rospy.Publisher("/makarax/pwm_throttle",Uint16, queue_size=8)
 
     # Subscriber
-    # pwm_subscriber = rospy.Subscriber("/makarax/pwm_throttle", UInt16, pwmCallback)
     mode_subscriber = rospy.Subscriber("/makarax/mode", Mode, modeCallback)
-    # pwm_override_subscriber = rospy.Subscriber("/makarax/pwm_override", Bool, pwmOverrideCallback)
     just_forward_subscriber = rospy.Subscriber("/makarax/pwm_just_forward", Bool, just_forward_callback)
     control_effort_subscriber = rospy.Subscriber("control_effort", Float64, controlEffortCallback)
     red_count_subscriber = rospy.Subscriber("/makarax/object/count", ObjectCount, objectCountCallback)
-    # joy_subscriber = rospy.Subscriber("joy", Joy, joyCallback)
     auto_control_subscriber = rospy.Subscriber("/makarax/auto_control", AutoControl, autoControlCallback)
+    pwm_input_subscriber = rospy.Subscriber("/makarax/pwm_input", Int16, pwmInputCallback)
 
     # pwm_subscriber = rospy.Subscriber("/makarax/pwm_throttle", UInt16, pwmCallback)    
     # pwm_override_subscriber = rospy.Subscriber("/makarax/pwm_override", Bool, pwmOverrideCallback)
     # joy_subscriber = rospy.Subscriber("joy", Joy, joyCallback)
+
+    pwm_publisher.publish(currentThrottlePwm)
+
     rospy.spin()
