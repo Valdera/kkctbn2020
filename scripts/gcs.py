@@ -20,7 +20,6 @@ detect = "None"
 
 pwm_input = 0
 frame, threshold, image_hsv = None, None, None
-inputMode = True
 mouseX, mouseY = None, None
 roi = None
 
@@ -35,18 +34,18 @@ def add_slider(text, from_, to_, resolution, frame, row, default=0):
     scale.grid(row=row, column=1, padx=5, sticky='n', pady=0)
     return scale
 
-def selectROI(event, x, y, flags, params):
-    global mouseX, mouseY, inputMode, image_hsv, roi, detect #, new_img
-    if inputMode and event == cv.EVENT_LBUTTONDOWN:
-        # cv.circle(new_img, (x, y), 4, (0, 255, 0), 2)
-        mouseX, mouseY = x, y
-        roi = image_hsv[mouseY-10:mouseY+10, mouseX-10:mouseX+10]
-        detect = "Red"
-    elif inputMode and event == cv.EVENT_RBUTTONDOWN:
-        # cv.circle(new_img, (x, y), 4, (0, 255, 0), 2)
-        mouseX, mouseY = x, y
-        roi = image_hsv[mouseY-10:mouseY+10, mouseX-10:mouseX+10]
-        detect = "Green"
+# def selectROI(event, x, y, flags, params):
+#     global mouseX, mouseY, image_hsv, roi, detect #, new_img
+#     if event == cv.EVENT_LBUTTONDOWN:
+#         # cv.circle(new_img, (x, y), 4, (0, 255, 0), 2)
+#         mouseX, mouseY = x, y
+#         roi = image_hsv[mouseY-10:mouseY+10, mouseX-10:mouseX+10]
+#         detect = "Red"
+#     elif event == cv.EVENT_RBUTTONDOWN:
+#         # cv.circle(new_img, (x, y), 4, (0, 255, 0), 2)
+#         mouseX, mouseY = x, y
+#         roi = image_hsv[mouseY-10:mouseY+10, mouseX-10:mouseX+10]
+#         detect = "Green"
 
 def key_press(event):
     global pwm_input
@@ -55,6 +54,17 @@ def key_press(event):
         pwm_input = 1
     elif key == 'Down':
         pwm_input = -1
+
+def mouse_click(event):
+    global mouseX, mouseY, image_hsv, roi, detect
+    if event.num == 1:
+        mouseX, mouseY = event.x, event.y
+        roi = image_hsv[mouseY-10:mouseY+10, mouseX-10:mouseX+10]
+        detect = "Red"
+    elif event.num == 3:
+        mouseX, mouseY = event.x, event.y
+        roi = image_hsv[mouseY-10:mouseY+10, mouseX-10:mouseX+10]
+        detect = "Green"
 
 def image_callback(img):
     global ori
@@ -198,14 +208,15 @@ if __name__ == '__main__':
 
     mask_info_frame.grid(row=1, column=2, pady=(0, 5))
 
-    # ori_label = Tkinter.Label(master=master, image=None)
-    # ori_label.grid(row=2, column=1)
+    ori_label = Tkinter.Label(master=master, image=None)
+    ori_label.bind("<Button>", mouse_click)
+    ori_label.grid(row=2, column=1, columnspan=2)
 
     red_mask_label = Tkinter.Label(master=master, image=None)
-    red_mask_label.grid(row=2, column=1, columnspan=2)
+    red_mask_label.grid(row=2, column=3)
 
     green_mask_label = Tkinter.Label(master=master, image=None)
-    green_mask_label.grid(row=2, column=3)
+    green_mask_label.grid(row=2, column=4)
 
     master.update()
 
@@ -214,28 +225,30 @@ if __name__ == '__main__':
     master_width = master.winfo_width()
 
     photo_height = int(round(master_height - slider_frame.winfo_height()))
-    photo_width = int(round(((master_width - slider_frame.winfo_width()) / 2)))
+    photo_width = int(round(master_width / 3))
 
-    # Check if 2 images' width are larger than the window's width
-    if (int(round(photo_height * 642 / 482) * 2) > master_width):
+    # Check if images' height are larger than the window's available height
+    if (int(round(photo_width * 482 / 642) * 3) > photo_height):
         # Calculate image size based on the window's width
         photo_height = int(round(photo_width * 482 / 642))
     else:
         # Calculate image size based on the window's height
         photo_width = int(round(photo_height * 642 / 482))
 
-    cv.namedWindow("Camera Output")
-    cv.setMouseCallback("Camera Output", selectROI)
+    # cv.namedWindow("Camera Output")
+    # cv.setMouseCallback("Camera Output", selectROI)
 
     while not rospy.is_shutdown():
         if ori is not None:
-            image_hsv = cv.cvtColor(ori, cv.COLOR_BGR2HSV)
-            cv.imshow("Camera Output", ori)
-            # b, g, r = cv.split(ori)
-            # ori_img_array = cv.merge((r, g, b))
-            # ori_img = Image.fromarray(ori_img_array)
-            # ori_img_tk = ImageTk.PhotoImage(image=ori_img)
-            # ori_label.config(image=ori_img_tk)
+            ori_resize = cv.resize(ori, (photo_width, photo_height))
+            image_hsv = cv.cvtColor(ori_resize, cv.COLOR_BGR2HSV)
+            # cv.imshow("Camera Output", ori)
+            b, g, r = cv.split(ori_resize)
+            ori_img_array = cv.merge((r, g, b))
+            ori_img = Image.fromarray(ori_img_array)
+            ori_img_resize = ori_img.resize((photo_width, photo_height), Image.ANTIALIAS)
+            ori_img_tk = ImageTk.PhotoImage(image=ori_img_resize)
+            ori_label.config(image=ori_img_tk)
 
         if red_mask is not None:
             b, g, r = cv.split(red_mask)
@@ -299,7 +312,7 @@ if __name__ == '__main__':
 
         master.update()
 
-        cv.waitKey(30)
+        # cv.waitKey(30)
         cfg = Config()
         
         cfg.red_low_hue = red_low_hue
