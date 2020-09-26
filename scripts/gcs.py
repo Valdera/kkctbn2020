@@ -14,7 +14,7 @@ ori = numpy.zeros([480, 640, 3], dtype = numpy.uint8)
 red_mask = numpy.zeros([480, 640, 3], dtype = numpy.uint8)
 green_mask = numpy.zeros([480, 640, 3], dtype = numpy.uint8)
 throttle_pwm = 0
-auto_ctrl = "None"
+auto_ctrl = "Red, Green"
 mode = "None"
 detect = "None"
 
@@ -224,8 +224,17 @@ if __name__ == '__main__':
     master_height = master.winfo_height()
     master_width = master.winfo_width()
 
-    photo_height = int(round(master_height - slider_frame.winfo_height()))
+    slider_height = slider_frame.winfo_height()
+
+    photo_height = int(round(master_height - slider_height))
     photo_width = int(round(master_width / 3))
+
+    amv_image = Image.open("amv.png")
+    amv_image_resize = amv_image.resize((slider_height, slider_height), Image.ANTIALIAS)
+    amv_image_tkinter = ImageTk.PhotoImage(image=amv_image_resize)
+
+    amv_label = Tkinter.Label(master=master, image=amv_image_tkinter)
+    amv_label.grid(row=1, column=4)
 
     # Check if images' height are larger than the window's available height
     if (int(round(photo_width * 482 / 642) * 3) > photo_height):
