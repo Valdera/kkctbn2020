@@ -133,6 +133,7 @@ if __name__ == '__main__':
         # Detect Contours
         contours, _ = cv.findContours(red_mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)[-2:]
         min_x = 9999
+        pos_min_y = 0
         for cnt in contours:
             area = cv.contourArea(cnt)
             approx = cv.approxPolyDP(cnt, 0.02 * cv.arcLength(cnt, True), True)
@@ -154,6 +155,7 @@ if __name__ == '__main__':
                     count_red += 1
                     if x < min_x:
                         min_x = x
+                        pos_min_y = y
 
         # Set up Green HSV
         green_low_hue = cfg.green_low_hue
@@ -171,6 +173,7 @@ if __name__ == '__main__':
         # Detect Countours
         contours, _ = cv.findContours(green_mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)[-2:]
         max_x = 0
+        pos_max_y = 0
         for cnt in contours:
             area = cv.contourArea(cnt)
             approx = cv.approxPolyDP(cnt, 0.02 * cv.arcLength(cnt, True), True)
@@ -192,6 +195,7 @@ if __name__ == '__main__':
                     count_green += 1
                     if x > max_x:
                         max_x = x
+                        pos_max_y = y
 
         # cv.imshow("Frame", frame)
         # cv.imshow("red_mask", red_mask)
@@ -214,6 +218,10 @@ if __name__ == '__main__':
                 state.data = 320           
             else:
                 state.data = 320
+                
+            cv.line(frame, (min_x, pos_min_y), (state.data, 240), (255, 255, 255), 2)
+            cv.line(frame, (max_x, pos_max_y), (state.data, 240), (255, 255, 255), 2)
+            cv.line(frame, (state.data, 0), (state.data, 480), (255, 255, 255), 2)
                 
         else :
             state.data = min_x
