@@ -202,12 +202,22 @@ if __name__ == '__main__':
         object_count_publisher.publish(objectCount)
         
         state = Float64()
-        state.data = min_x
+        
+        if (auto_ctrl.state == AutoControl.AVOID_RED_AND_GREEN):
+            if (count_green > 0 and count_red == 0):             
+                state.data = 320 + 60
+            elif (count_red > 0 and count_green == 0):
+                state.data = 320 - 60
+            elif (count_red > 0 and count_green > 0):
+                state.data = (max_x + min_x) / 2  
+            elif (count_red == 0 and count_green == 0):     
+                state.data = 320           
+            else:
+                state.data = 320
+                
+        else :
+            state.data = min_x
     
-        if auto_ctrl.state == AutoControl.AVOID_RED_AND_GREEN and count_green > 0:
-            state = Float64()
-            state.data = max_x - 640
-
         state_publisher.publish(state)
         
 
