@@ -11,7 +11,7 @@ autoControl = AutoControl()
 autoControlBefore = AutoControl()
 control_effort = float()
 currentThrottlePwm = 1600
-pwm_full = 1300
+pwm_full = 1700
 just_forward = False
 
 # Compass Callback
