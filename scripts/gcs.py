@@ -6,7 +6,7 @@ import rospy
 import Tkinter
 from PIL import Image, ImageTk
 from sensor_msgs.msg import CompressedImage
-from std_msgs.msg import UInt16, Int16
+from std_msgs.msg import UInt16, Int16, Float64, Bool
 # Local Import
 from kkctbn2020.msg import AutoControl, Config, ObjectCount, Mode
 
@@ -14,6 +14,8 @@ ori = numpy.zeros([480, 640, 3], dtype = numpy.uint8)
 red_mask = numpy.zeros([480, 640, 3], dtype = numpy.uint8)
 green_mask = numpy.zeros([480, 640, 3], dtype = numpy.uint8)
 throttle_pwm = 0
+setpoint = 0
+pwm_just_forward = False
 auto_ctrl = "Red, Green"
 mode = "None"
 detect = "None"
@@ -104,6 +106,14 @@ def auto_control_callback(msg):
     else:
         auto_ctrl = "None"
 
+def setpoint_callback(set):
+    global setpoint
+    setpoint = set.data
+
+def pwm_just_forward_callback(state):
+    global pwm_just_forward
+    pwm_just_forward = state.data
+
 if __name__ == '__main__':
     # Initialize gcs node
     rospy.init_node('gcs', anonymous=True)
@@ -119,6 +129,8 @@ if __name__ == '__main__':
     green_mask_subscriber = rospy.Subscriber("/makarax/image/mask/green/compressed", CompressedImage, green_mask_callback)
     pwm_subscriber = rospy.Subscriber("/makarax/pwm_throttle", UInt16, throttle_pwm_callback)
     mode_subscriber = rospy.Subscriber("/makarax/mode", Mode, mode_callback)
+    setpoint_subscriber = rospy.Subscriber("setpoint", Float64, setpoint_callback)
+    pwm_just_forward_subscriber = rospy.Subscriber("/makarax/pwm_just_forward", Bool, pwm_just_forward_callback)
 
     master = Tkinter.Tk()
     master.title("Config")
@@ -145,6 +157,16 @@ if __name__ == '__main__':
     auto_label_title.grid(row=3, column=1, sticky="e")
     auto_label_value = Tkinter.Label(motor_info_frame, text=auto_ctrl, fg='black', font=("Helvetica", 12, 'bold'))
     auto_label_value.grid(row=3, column=2, sticky="w")
+
+    setpoint_label_title = Tkinter.Label(motor_info_frame, text="Setpoint:", fg='black', font=("Helvetica", 12))
+    setpoint_label_title.grid(row=4, column=1, sticky="e")
+    setpoint_label_value = Tkinter.Label(motor_info_frame, text=str(setpoint), fg='black', font=("Helvetica", 12, 'bold'))
+    setpoint_label_value.grid(row=4, column=2, sticky="w")
+
+    pwm_just_forward_label_title = Tkinter.Label(motor_info_frame, text="State:", fg='black', font=("Helvetica", 12))
+    pwm_just_forward_label_title.grid(row=5, column=1, sticky="e")
+    pwm_just_forward_label_value = Tkinter.Label(motor_info_frame, text=str(pwm_just_forward), fg='black', font=("Helvetica", 12, 'bold'))
+    pwm_just_forward_label_value.grid(row=5, column=2, sticky="w")
 
     motor_info_frame.grid(row=1, column=2, pady=(0, 5))
 
@@ -309,6 +331,8 @@ if __name__ == '__main__':
         pwm_label_value.config(text=str(throttle_pwm))
         mode_label_value.config(text=mode)
         auto_label_value.config(text=auto_ctrl)
+        setpoint_label_value.config(text=str(setpoint))
+        pwm_just_forward_label_value.config(text=str(pwm_just_forward))
 
         red_hue_label_value.config(text=str(round(red_low_hue, 2)) + ", " + str(round(red_high_hue, 2)))
         red_sat_label_value.config(text=str(round(red_low_sat, 2)) + ", " + str(round(red_high_sat, 2)))

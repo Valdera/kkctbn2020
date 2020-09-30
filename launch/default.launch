@@ -5,7 +5,7 @@
     <node pkg="kkctbn2020" name="auto_control" type="auto_control.py" output="screen"/>
     <node pkg="kkctbn2020" name="image_processing" type="image_processing.py" output="screen"/>
     <node pkg="kkctbn2020" name="setpoint" type="setpoint.py" output="screen"/>
-    <node pkg="kkctbn2020" name="server" type="server.py" output="screen"/>
+    <!-- <node pkg="kkctbn2020" name="server" type="server.py" output="screen"/> -->
     <node pkg="kkctbn2020" name="mode" type="mode.py" output="screen"/>
     <node pkg="kkctbn2020" name="pwm_override" type="pwm_override.py" output="screen"/>
     <node pkg="kkctbn2020" name="motor_controller" type="motor_controller.py" output="screen"/>

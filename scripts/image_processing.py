@@ -228,7 +228,6 @@ if __name__ == '__main__':
             state.data = min_x
     
         state_publisher.publish(state)
-        
 
         published_red_mask = CompressedImage()
         published_red_mask.header.stamp = rospy.Time.now()
