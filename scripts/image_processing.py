@@ -210,19 +210,26 @@ if __name__ == '__main__':
         if (auto_ctrl.state == AutoControl.AVOID_RED_AND_GREEN):
             if (count_green > 0 and count_red == 0):             
                 state.data = 320 + 60
+                # Green Line
+                cv.line(frame, (max_x, pos_max_y), (state.data, 240), (255, 255, 255), 2)
+            
             elif (count_red > 0 and count_green == 0):
                 state.data = 320 - 60
+                # Red Line
+                cv.line(frame, (min_x, pos_min_y), (state.data, 240), (255, 255, 255), 2)
+            
             elif (count_red > 0 and count_green > 0):
-                state.data = (max_x + min_x) / 2  
+                state.data = (max_x + min_x) / 2
+                # Green Line
+                cv.line(frame, (max_x, pos_max_y), (state.data, 240), (255, 255, 255), 2)
+                # Red Line
+                cv.line(frame, (min_x, pos_min_y), (state.data, 240), (255, 255, 255), 2)
+                
             elif (count_red == 0 and count_green == 0):     
                 state.data = 320           
-            else:
-                state.data = 320
                 
-            cv.circle(frame, (state.data, 240), 3, (0, 255, 255), -1)
-            cv.line(frame, (min_x, pos_min_y), (state.data, 240), (255, 255, 255), 2)
-            cv.line(frame, (max_x, pos_max_y), (state.data, 240), (255, 255, 255), 2)
-            cv.line(frame, (320, 0), (320, 480), (255, 255, 255), 2)
+            cv.line(frame, (320, 0), (320, 480), (255, 255, 255), 1)
+            cv.line(frame, (state.data, 120), (state.data, 360), (0, 255, 255), 2)
                 
         else :
             state.data = min_x
