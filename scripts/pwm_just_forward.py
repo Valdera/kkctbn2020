@@ -8,7 +8,7 @@ current_auto_control = AutoControl()
 current_mode = Mode()
 init_compass = None
 current_compass = None
-degree_decision = 90.0
+degree_decision = 95.0
 lower_tolerance = None
 upper_tolerance = None
 
@@ -30,7 +30,7 @@ def compass_callback(degree):
     # Initialize start degree
     if init_compass is None:
         init_compass = degree.data
-        # Set the tolerance degree to push forward (88 - 92)
+        # Set the tolerance degree to push forward (85 - 95)
         upper_tolerance = init_compass + degree_decision + 5.0
         lower_tolerance = init_compass + degree_decision - 5.0 
         if upper_tolerance > 360.0:
@@ -62,4 +62,5 @@ if __name__ == '__main__':
     auto_control_subscriber = rospy.Subscriber("/makarax/auto_control", AutoControl, auto_control_callback)
     mode_subscriber = rospy.Subscriber("/makarax/mode", Mode, mode_callback)
     compass_subscriber = rospy.Subscriber("/mavros/global_position/compass_hdg", Float64, compass_callback)
+
     rospy.spin()
