@@ -229,7 +229,7 @@ if __name__ == '__main__':
                 state.data = 320           
                 
             cv.line(frame, (320, 0), (320, 480), (255, 255, 255), 1)
-            cv.line(frame, (state.data, 120), (state.data, 360), (0, 255, 255), 2)
+            cv.circle(frame, (state.data, 240), 5, (0, 255, 255))
                 
         else :
             state.data = min_x
