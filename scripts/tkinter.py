@@ -27,7 +27,7 @@ if __name__ == '__main__':
     amv_label.grid(row=1, column=1, columnspan=3)
 
     test_slider = add_slider("Test", 0.0, 100.0, 1, master, 2, 50)
-    test_slider_value = add_label(str(test_slider.get()), master, 2)
+    test_slider_value = add_label(str(test_slider.get()), master, )
 
     while True:
         test_slider_value.config(text=str(test_slider.get()))
