@@ -67,7 +67,6 @@ def autoControlCallback(msg):
 def objectCountCallback(msg):
     global autoControl, mode, control_effort, pwm_full
     rcin = OverrideRCIn()
-    throttle_pwm = UInt16()
     if (autoControl.state != AutoControl.MANUAL and mode.value == Mode.ARMED):
         # Channels
         motor1 = 0

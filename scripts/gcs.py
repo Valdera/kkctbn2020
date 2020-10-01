@@ -51,9 +51,9 @@ def add_label(frame, title, value, row):
     return label_value
 
 def add_slider(frame, from_, to_, resolution, row, default=0):
-    scale = Tkinter.Scale(frame, from_=from_, to=to_, resolution=resolution, orient=Tkinter.HORIZONTAL, length=300)
+    scale = Tkinter.Scale(frame, from_=from_, to=to_, resolution=resolution, orient=Tkinter.HORIZONTAL, showvalue=0, length=300)
     scale.set(default)
-    scale.grid(row=row, column=3, padx=5, sticky='n', pady=0)
+    scale.grid(row=row, column=3, padx=5, sticky='n', pady=2)
     return scale
 
 # def selectROI(event, x, y, flags, params):
@@ -76,10 +76,11 @@ def key_press(event):
         pwm_input = 1
     elif key == 'Down':
         pwm_input = -1
-    elif key == 'Left':
-        setpoint_input = 1
-    elif key == 'Right':
+        
+    if key == 'Left':
         setpoint_input = -1
+    elif key == 'Right':
+        setpoint_input = 1
 
 def mouse_click(event):
     global mouseX, mouseY, image_hsv, roi, detect
@@ -174,7 +175,7 @@ if __name__ == '__main__':
     setpoint_label    = add_label(motor_info_frame, "Set:", str(setpoint), 4)
     pwm_forward_label = add_label(motor_info_frame, "State:", str(pwm_just_forward), 5)
 
-    motor_info_frame.grid(row=1, column=2, pady=(0, 5))
+    motor_info_frame.grid(row=1, column=2, pady=(5, 5))
 
     # Set up slider
     slider_frame = Tkinter.Frame(master=master)
@@ -188,13 +189,13 @@ if __name__ == '__main__':
     gamma_value = add_slider(slider_frame, 0.1, 3, 0.1, 3, 1)
     gamma_label = add_label(slider_frame, 'Gamma:', str(gamma_value.get()), 3)
 
-    roi_value = add_slider(slider_frame, 0, 480, 1, 4, 5)
+    roi_value = add_slider(slider_frame, 0, 482, 1, 4, 241)
     roi_label = add_label(slider_frame, 'ROI Y:', str(roi_value.get()), 4)
 
     adjust_value = add_slider(slider_frame, 0, 200, 1, 5, 50)
     adjust_label = add_label(slider_frame, 'Adjust:', str(adjust_value.get()), 5)
 
-    slider_frame.grid(row=1, column=4, pady=(0, 5))
+    slider_frame.grid(row=1, column=4, pady=(5, 5))
 
     # Output Mask value
     mask_info_frame = Tkinter.Frame(master=master)
@@ -207,7 +208,7 @@ if __name__ == '__main__':
     green_sat_label = add_color(mask_info_frame, "Green Sat:", str(green_low_sat) + ", " + str(green_high_sat), 6, 'green')
     green_val_label = add_color(mask_info_frame, "Green Sat:", str(green_low_val) + ", " + str(green_high_val), 7, 'green')
 
-    mask_info_frame.grid(row=1, column=3, pady=(0, 5))
+    mask_info_frame.grid(row=1, column=3, pady=(5, 5))
 
     # Image Frame
     ori_label = Tkinter.Label(master=master, image=None)
@@ -226,17 +227,10 @@ if __name__ == '__main__':
     master_height = master.winfo_height()
     master_width = master.winfo_width()
 
-    slider_height = slider_frame.winfo_height()
+    frame_height = max(slider_frame.winfo_height(), motor_info_frame.winfo_height(), mask_info_frame.winfo_height())
 
-    photo_height = int(round(master_height - slider_height))
+    photo_height = int(round(master_height - frame_height))
     photo_width = int(round(master_width / 3))
-
-    amv_image = Image.open("amv.png")
-    amv_image_resize = amv_image.resize((slider_height, slider_height), Image.ANTIALIAS)
-    amv_image_tkinter = ImageTk.PhotoImage(image=amv_image_resize)
-
-    amv_label = Tkinter.Label(master=master, image=amv_image_tkinter)
-    amv_label.grid(row=1, column=1, pady=(0, 5))
 
     # Check if images' height are larger than the window's available height
     if (int(round(photo_width * 482 / 642) * 3) > photo_height):
@@ -246,7 +240,14 @@ if __name__ == '__main__':
         # Calculate image size based on the window's height
         photo_width = int(round(photo_height * 642 / 482))
 
-    roi_value.set(int(round(photo_height / 2)))
+    amv_image = Image.open("amv.png")
+    if (frame_height > photo_width):
+        frame_height = photo_width
+    amv_image_resize = amv_image.resize((frame_height, frame_height), Image.ANTIALIAS)
+    amv_image_tkinter = ImageTk.PhotoImage(image=amv_image_resize)
+
+    amv_label = Tkinter.Label(master=master, image=amv_image_tkinter)
+    amv_label.grid(row=1, column=1, pady=(5, 5))
 
     # cv.namedWindow("Camera Output")
     # cv.setMouseCallback("Camera Output", selectROI)
@@ -331,9 +332,9 @@ if __name__ == '__main__':
         
         contrast_label.config(text=str(contrast_value.get()))
         brightness_label.config(text=str(brightness_value.get()))
-        gamma_label.config(str(gamma_value.get()))
-        roi_label.config(str(roi_value.get()))
-        adjust_label.config(str(adjust_value.get()))
+        gamma_label.config(text=str(gamma_value.get()))
+        roi_label.config(text=str(roi_value.get()))
+        adjust_label.config(text=str(adjust_value.get()))
 
         master.update()
 
