@@ -147,6 +147,7 @@ if __name__ == '__main__':
     cfg_publisher = rospy.Publisher("/makarax/config", Config, queue_size=8)
     pwm_input_publisher = rospy.Publisher("/makarax/pwm_input", Int16, queue_size=8)
     setpoint_input_publisher = rospy.Publisher("/makarax/setpoint_input", Int16, queue_size=8)
+    degree_decision_publisher = rospy.Publisher("/makarax/degree_decision", Int16, queue_size=8)
 
     # Set Subscriber nodes
     img_subscriber = rospy.Subscriber("/makarax/image/processed/compressed", CompressedImage, image_callback)
@@ -194,6 +195,9 @@ if __name__ == '__main__':
 
     adjust_value = add_slider(slider_frame, 0, 200, 1, 5, 50)
     adjust_label = add_label(slider_frame, 'Adjust:', str(adjust_value.get()), 5)
+
+    degree_value = add_slider(slider_frame, 0, 180, 1, 6, 95)
+    degree_label = add_label(slider_frame, "Degree:", str(degree_value.get()), 6)
 
     slider_frame.grid(row=1, column=4, pady=(5, 5))
 
@@ -335,6 +339,7 @@ if __name__ == '__main__':
         gamma_label.config(text=str(gamma_value.get()))
         roi_label.config(text=str(roi_value.get()))
         adjust_label.config(text=str(adjust_value.get()))
+        degree_label.config(text=str(degree_value.get()))
 
         master.update()
 
@@ -359,3 +364,4 @@ if __name__ == '__main__':
         cfg.roi_y = roi_value.get()
 
         cfg_publisher.publish(cfg)
+        degree_decision_publisher.publish(degree_value.get())

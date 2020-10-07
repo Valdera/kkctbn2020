@@ -29,7 +29,7 @@ if __name__ == '__main__':
     rospy.init_node('setpoint', anonymous=True)
 
     # Set Publisher
-    setpoint_node = rospy.Publisher("setpoint", Float64, queue_size=1)
+    setpoint_node = rospy.Publisher("setpoint", Float64, queue_size=14)
     
     # Set Subscriber
     auto_control_subscriber = rospy.Subscriber("/makarax/auto_control", AutoControl, auto_control_callback)

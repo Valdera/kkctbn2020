@@ -144,7 +144,7 @@ if __name__ == '__main__':
             x = int(M["m10"] / M["m00"])
             y = int(M["m01"] / M["m00"])
 
-            if area > MIN_AREA and y > roi_y:
+            if area > MIN_AREA and y > roi_y and x < 320:
                 # cv.drawContours(frame, [approx], 0, (0, 0, 0), 5)
                 c = max(contours, key = cv.contourArea)
                 a,b,w,h = cv.boundingRect(c)
@@ -197,9 +197,6 @@ if __name__ == '__main__':
                         max_x = x
                         pos_max_y = y
 
-        # cv.imshow("Frame", frame)
-        # cv.imshow("red_mask", red_mask)
-        # cv.waitKey(30)
         objectCount = ObjectCount()
         objectCount.red = count_red
         objectCount.green = count_green
@@ -209,12 +206,12 @@ if __name__ == '__main__':
         
         if (auto_ctrl.state == AutoControl.AVOID_RED_AND_GREEN):
             if (count_green > 0 and count_red == 0):             
-                state.data = 320 + 60
+                state.data = 320 - 60
                 # Green Line
                 cv.line(frame, (max_x, pos_max_y), (state.data, 240), (255, 255, 255), 2)
             
             elif (count_red > 0 and count_green == 0):
-                state.data = 320 - 60
+                state.data = 320 + 60
                 # Red Line
                 cv.line(frame, (min_x, pos_min_y), (state.data, 240), (255, 255, 255), 2)
             
