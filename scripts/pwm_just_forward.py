@@ -53,6 +53,8 @@ def compass_callback(degree):
     # If on manual mode, reset everything
     else:
         init_compass = None
+        upper_tolerance = None
+        lower_tolerance = None
         published_data.data = False
         pwm_just_forward_publisher.publish(published_data)
 
