@@ -160,7 +160,10 @@ if __name__ == '__main__':
     pwm_just_forward_subscriber = rospy.Subscriber("/makarax/pwm_just_forward", Bool, pwm_just_forward_callback)
 
     master = Tkinter.Tk()
-    master.title("Config")
+    master.title("AMV Control Board")
+    
+    logo = ImageTk.PhotoImage(file='amv.gif')
+    master.call('wm', 'iconphoto', master._w, logo)
     
     master_width = master.winfo_screenwidth()
     master_height = master.winfo_screenheight()
