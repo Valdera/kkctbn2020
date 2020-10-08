@@ -32,7 +32,7 @@ def compass_callback(degree):
 
     current_compass = degree.data
     print(lower_tolerance)
-    print(upper_toleranceprin)
+    print(upper_tolerance)
     # If between the tolerance degree just push forward    
     if (current_mode.value == Mode.ARMED):
         # if on AutoControl mode, publish the data
