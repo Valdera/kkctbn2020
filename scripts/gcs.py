@@ -16,6 +16,7 @@ green_mask = numpy.zeros([480, 640, 3], dtype = numpy.uint8)
 
 throttle_pwm = 0
 setpoint = 0
+delta = 0
 pwm_just_forward = False
 auto_ctrl = "Red, Green"
 mode = "None"
@@ -111,9 +112,9 @@ def green_mask_callback(img):
     mask_cv = cv.imdecode(mask_cv, cv.IMREAD_COLOR)
     green_mask = mask_cv
 
-def throttle_pwm_callback(pwm):
+def throttle_pwm_callback(msg):
     global throttle_pwm
-    throttle_pwm = pwm.data
+    throttle_pwm = msg.data
 
 def mode_callback(mode_in):
     global mode
@@ -131,13 +132,17 @@ def auto_control_callback(msg):
     else:
         auto_ctrl = "None"
 
-def setpoint_callback(set):
+def setpoint_callback(msg):
     global setpoint
-    setpoint = set.data
+    setpoint = msg.data
 
 def pwm_just_forward_callback(state):
     global pwm_just_forward
     pwm_just_forward = state.data
+
+def delta_callback(msg):
+    global delta
+    delta = msg.data
 
 if __name__ == '__main__':
     # Initialize gcs node
@@ -158,6 +163,7 @@ if __name__ == '__main__':
     mode_subscriber = rospy.Subscriber("/makarax/mode", Mode, mode_callback)
     setpoint_subscriber = rospy.Subscriber("setpoint", Float64, setpoint_callback)
     pwm_just_forward_subscriber = rospy.Subscriber("/makarax/pwm_just_forward", Bool, pwm_just_forward_callback)
+    delta_compass = rospy.Subscriber("/makarax/delta", Float64, delta_callback)
 
     master = Tkinter.Tk()
     master.title("AMV Control Board")
@@ -178,6 +184,7 @@ if __name__ == '__main__':
     auto_label        = add_label(motor_info_frame, "Avoid:", auto_ctrl, 3)
     setpoint_label    = add_label(motor_info_frame, "Set:", str(setpoint), 4)
     pwm_forward_label = add_label(motor_info_frame, "State:", str(pwm_just_forward), 5)
+    delta_label       = add_label(motor_info_frame, "Delta:", str(delta), 6)
 
     motor_info_frame.grid(row=1, column=2, pady=(5, 5))
 
@@ -328,6 +335,7 @@ if __name__ == '__main__':
         auto_label.config(text=auto_ctrl)
         setpoint_label.config(text=str(setpoint))
         pwm_forward_label.config(text=str(pwm_just_forward))
+        delta_label.config(text=str(delta))
 
         red_hue_label.config(text=str(round(red_low_hue, 2)) + ", " + str(round(red_high_hue, 2)))
         red_sat_label.config(text=str(round(red_low_sat, 2)) + ", " + str(round(red_high_sat, 2)))

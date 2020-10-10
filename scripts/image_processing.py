@@ -225,7 +225,6 @@ if __name__ == '__main__':
             elif (count_red == 0 and count_green == 0):     
                 state.data = 320           
                 
-            cv.line(frame, (320, 0), (320, 480), (255, 255, 255), 1)
             cv.circle(frame, (state.data, 240), 5, (0, 255, 255))
                 
         else :
