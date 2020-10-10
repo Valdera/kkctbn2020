@@ -7,6 +7,7 @@ from std_msgs.msg import Bool, Float64, Int16
 current_auto_control = AutoControl()
 current_mode = Mode()
 init_compass = None
+init_compass_delta = None
 current_compass = None
 degree_decision = 95.0
 lower_tolerance = None
@@ -26,11 +27,18 @@ def degree_decision_callback(msg):
     degree_decision = msg.data
 
 def compass_callback(degree):
-    global  init_compass, current_compass, degree_decision, upper_tolerance, lower_tolerance, current_auto_control, current_mode
+    global  init_compass_delta, init_compass, current_compass, degree_decision, upper_tolerance, lower_tolerance, current_auto_control, current_mode
     published_data = Bool()
     published_data.data = False
 
     current_compass = degree.data
+    if (current_auto_control.state != AutoControl.MANUAL):
+        if init_compass_delta is None:
+            init_compass_delta = degree.data
+
+    delta = abs(current_compass - init_compass) 
+    delta_compass_publisher.publish(delta)
+
     # If between the tolerance degree just push forward    
     if (current_mode.value == Mode.ARMED and current_auto_control.state != AutoControl.MANUAL)):
         # if on AutoControl mode, publish the data
@@ -43,13 +51,11 @@ def compass_callback(degree):
                 upper_tolerance -= 360
                 lower_tolerance -= 360
         
-        delta = current_compass - init_compass
 
         if current_compass >= lower_tolerance and current_compass <= upper_tolerance:
             published_data.data = True
 
         pwm_just_forward_publisher.publish(published_data)
-        delta_compass_publisher.publish(delta)
         
     # If on manual mode, reset everything
     else:
